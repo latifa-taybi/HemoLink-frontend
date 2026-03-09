@@ -46,7 +46,6 @@ export interface LoginRequest {
 
 export interface AuthResponse {
   token: string;
-  utilisateur: UtilisateurResponseDto;
 }
 
 @Injectable({
@@ -76,11 +75,30 @@ export class Auth {
       .post<AuthResponse>(`${this.apiUrl}/auth/login`, loginRequest)
       .pipe(
         tap((response) => {
-          // Stocker le token et l'utilisateur
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.utilisateur));
-          this.tokenSubject.next(response.token);
-          this.userSubject.next(response.utilisateur);
+          const token = response.token;
+          
+          // Decode the JWT token to extract role and email
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const payload = JSON.parse(decodeURIComponent(window.atob(base64).split('').map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join('')));
+          
+          // Construct a mock UtilisateurResponseDto based on the token
+          const user: UtilisateurResponseDto = {
+            id: 0,
+            prenom: 'User',
+            nom: payload.sub?.split('@')[0] || 'Unknown',
+            email: payload.sub,
+            role: payload.role as RoleUtilisateur,
+            actif: true,
+            creeLe: new Date().toISOString()
+          };
+
+          localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
+          this.tokenSubject.next(token);
+          this.userSubject.next(user);
         })
       );
   }
