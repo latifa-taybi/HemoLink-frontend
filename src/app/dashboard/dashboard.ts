@@ -18,6 +18,12 @@ export class Dashboard implements OnInit {
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/auth/login']);
+      return;
+    }
+    
+    const user = this.authService.getUser();
+    if (user?.role === RoleUtilisateur.ADMIN) {
+      this.router.navigate(['/admin']);
     }
   }
 
