@@ -1,0 +1,99 @@
+<section class="page-section">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Stock sanguin</h1>
+      <p class="page-sub">Niveaux de stock par groupe et par centre (algorithme FEFO)</p>
+    </div>
+    <div class="header-stats">
+      <span class="stat-chip stat-blue">Total disponible : <strong>{{ totalDisponible() }}</strong></span>
+      <span class="stat-chip stat-red">Bientôt expirées : <strong>{{ totalExpirant() }}</strong></span>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-row">
+    <select [(ngModel)]="selectedCenter" class="form-select">
+      <option value="">Tous les centres</option>
+      @for (c of centers; track c.id) {
+        <option [value]="c.id">{{ c.nom }}</option>
+      }
+    </select>
+    <select [(ngModel)]="selectedGroupe" class="form-select">
+      <option value="">Tous les groupes</option>
+      @for (g of groupes; track g) {
+        <option [value]="g">{{ groupeLabels[g] }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading) {
+    <div class="loading-placeholder">Chargement du stock...</div>
+  } @else {
+    <!-- Stock by Blood Group -->
+    <div class="section-card">
+      <h3 class="section-title">Stock par groupe sanguin</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Groupe</th>
+              <th>Disponibles</th>
+              <th>Réservées</th>
+              <th>Bientôt expirées</th>
+              <th>Statut FEFO</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of filteredGroupeStock; track s.groupeSanguin) {
+              <tr>
+                <td>
+                  <span class="blood-group-tag">{{ groupeLabels[s.groupeSanguin] }}</span>
+                </td>
+                <td><strong>{{ s.quantiteDisponible }}</strong></td>
+                <td>{{ s.quantiteReservee }}</td>
+                <td>
+                  @if (s.pochesBientotExpirees > 0) {
+                    <span class="expiry-warn">⚠️ {{ s.pochesBientotExpirees }}</span>
+                  } @else {
+                    <span class="expiry-ok">—</span>
+                  }
+                </td>
+                <td>
+                  <span class="level-badge level-{{ getStockLevel(s.quantiteDisponible) }}">
+                    @if (getStockLevel(s.quantiteDisponible) === 'critical') { 🔴 Critique }
+                    @if (getStockLevel(s.quantiteDisponible) === 'low') { 🟡 Faible }
+                    @if (getStockLevel(s.quantiteDisponible) === 'ok') { 🟢 OK }
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Stock by Centre -->
+    @if (filteredCentreStock.length > 0) {
+      <div class="section-card">
+        <h3 class="section-title">Stock par centre de collecte</h3>
+        @for (centre of filteredCentreStock; track centre.centreId) {
+          <div class="centre-stock-block">
+            <div class="centre-stock-header">
+              <h4>{{ centre.centreNom }} <span class="city-tag">{{ centre.ville }}</span></h4>
+            </div>
+            <div class="centre-stock-grid">
+              @for (s of centre.stocks; track s.groupeSanguin) {
+                <div class="stock-mini-card level-{{ getStockLevel(s.quantiteDisponible) }}">
+                  <span class="mini-group">{{ groupeLabels[s.groupeSanguin] }}</span>
+                  <span class="mini-qty">{{ s.quantiteDisponible }}</span>
+                  <span class="mini-label">poches</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</section>

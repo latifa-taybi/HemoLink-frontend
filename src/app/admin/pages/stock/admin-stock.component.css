@@ -1,0 +1,44 @@
+@import '../../admin-shared.css';
+
+/* ── Stock page extra styles ──────────────────────────────── */
+.header-stats { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.stat-chip {
+  padding: 8px 16px; border-radius: 20px; font-size: .82rem; font-weight: 500;
+}
+.stat-blue { background: #dbeafe; color: #1e40af; }
+.stat-red  { background: #fee2e2; color: #991b1b; }
+
+.expiry-warn { color: #dc2626; font-weight: 600; }
+.expiry-ok   { color: #9ca3af; }
+
+/* Per-centre breakdown */
+.centre-stock-block { margin-bottom: 24px; }
+.centre-stock-block:last-child { margin-bottom: 0; }
+.centre-stock-header {
+  margin-bottom: 12px;
+}
+.centre-stock-header h4 {
+  font-size: .95rem; font-weight: 700; color: #111827; margin: 0;
+  display: flex; align-items: center; gap: 10px;
+}
+.city-tag {
+  font-size: .75rem; font-weight: 500; color: #6b7280;
+  background: #f3f4f6; padding: 2px 8px; border-radius: 10px;
+}
+
+.centre-stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.stock-mini-card {
+  border-radius: 10px; padding: 12px 8px; text-align: center;
+  border: 1.5px solid transparent; transition: all .2s;
+}
+.stock-mini-card.level-ok       { background: #f0fdf4; border-color: #86efac; }
+.stock-mini-card.level-low      { background: #fffbeb; border-color: #fde68a; }
+.stock-mini-card.level-critical { background: #fef2f2; border-color: #fca5a5; }
+
+.mini-group { font-size: 1rem; font-weight: 800; color: #dc2626; display: block; }
+.mini-qty   { font-size: 1.2rem; font-weight: 700; color: #111827; display: block; margin-top: 2px; }
+.mini-label { font-size: .65rem; color: #9ca3af; display: block; }
