@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, switchMap, map, catchError, of } from 'rxjs';
+
+
 
 // Roles disponibles
 export enum RoleUtilisateur {
@@ -76,32 +78,61 @@ export class Auth {
       .pipe(
         tap((response) => {
           const token = response.token;
-          
-          // Decode the JWT token to extract role and email
+          console.log('[Auth] Login response token present:', !!token);
+
+          // Decode JWT payload
           const base64Url = token.split('.')[1];
           const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          const payload = JSON.parse(decodeURIComponent(window.atob(base64).split('').map(function(c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join('')));
-          
-          // Construct a mock UtilisateurResponseDto based on the token
-          const user: UtilisateurResponseDto = {
+          const payload = JSON.parse(decodeURIComponent(
+            window.atob(base64).split('').map(c =>
+              '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join('')
+          ));
+          console.log('[Auth] JWT payload:', payload);
+
+          // Store token immediately so the next HTTP call (with auth interceptor) works
+          localStorage.setItem('token', token);
+          this.tokenSubject.next(token);
+
+          // Build a temporary user object from token payload
+          const tempUser: UtilisateurResponseDto = {
             id: 0,
-            prenom: 'User',
+            prenom: '',
             nom: payload.sub?.split('@')[0] || 'Unknown',
             email: payload.sub,
             role: payload.role as RoleUtilisateur,
             actif: true,
             creeLe: new Date().toISOString()
           };
-
-          localStorage.setItem('token', token);
-          localStorage.setItem('user', JSON.stringify(user));
-          this.tokenSubject.next(token);
-          this.userSubject.next(user);
-        })
+          this.userSubject.next(tempUser);
+          localStorage.setItem('user', JSON.stringify(tempUser));
+          console.log('[Auth] Temp user stored, email:', tempUser.email);
+        }),
+        // Resolve the real utilisateur ID by fetching user list
+        switchMap(() =>
+          this.http.get<UtilisateurResponseDto[]>(`${this.apiUrl}/utilisateurs`).pipe(
+            tap((users) => {
+              const currentEmail = this.userSubject.value?.email?.toLowerCase();
+              console.log('[Auth] /utilisateurs returned', users.length, 'users. Looking for:', currentEmail);
+              const fullUser = users.find(u => u.email?.toLowerCase() === currentEmail);
+              if (fullUser) {
+                localStorage.setItem('user', JSON.stringify(fullUser));
+                this.userSubject.next(fullUser);
+                console.log('[Auth] ✅ User ID resolved:', fullUser.id, '| Role:', fullUser.role);
+              } else {
+                console.warn('[Auth] ⚠️ Could not find user with email:', currentEmail, 'in list:', users.map(u => u.email));
+              }
+            }),
+            map(() => ({ token: this.tokenSubject.value! } as AuthResponse)),
+            catchError((err) => {
+              console.error('[Auth] /utilisateurs call failed:', err.status, err.message);
+              return of({ token: this.tokenSubject.value! } as AuthResponse);
+            })
+          )
+        )
       );
   }
+
 
   /**
    * Register: POST /api/auth/inscription
