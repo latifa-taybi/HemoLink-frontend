@@ -1,0 +1,79 @@
+<section class="page-section">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestion des commandes</h1>
+      <p class="page-sub">Suivi et mise à jour des commandes hospitalières</p>
+    </div>
+    @if (urgentCount() > 0) {
+      <div class="urgent-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+        {{ urgentCount() }} commande(s) urgente(s)
+      </div>
+    }
+  </div>
+
+  @if (success) { <div class="alert-success">{{ success }}</div> }
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    @for (tab of filterTabs; track tab.key) {
+      <button
+        class="tab-btn"
+        [class.tab-active]="activeFilter === tab.key"
+        (click)="applyFilter(tab.key)"
+      >{{ tab.label }}</button>
+    }
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    @if (loading) {
+      <div class="loading-placeholder">Chargement des commandes...</div>
+    } @else if (filtered.length === 0) {
+      <div class="empty-state">Aucune commande dans cette catégorie.</div>
+    } @else {
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Hôpital</th>
+            <th>Groupe sanguin</th>
+            <th>Quantité</th>
+            <th>Date</th>
+            <th>Statut actuel</th>
+            <th>Modifier statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of filtered; track order.id) {
+            <tr [class.row-urgent]="order.urgence">
+              <td>
+                #{{ order.id }}
+                @if (order.urgence) { <span class="urgent-tag">🚨</span> }
+              </td>
+              <td>Hôpital #{{ order.hopitalId }}</td>
+              <td><span class="blood-group-tag">{{ groupeLabels[order.groupeSanguin] }}</span></td>
+              <td><strong>{{ order.quantite }}</strong> poche(s)</td>
+              <td>{{ formatDate(order.dateCommande) }}</td>
+              <td>
+                <span class="statut-badge statut-{{ order.statut }}">{{ statutLabels[order.statut] }}</span>
+              </td>
+              <td>
+                <select
+                  class="form-select-sm"
+                  [value]="order.statut"
+                  (change)="updateStatut(order, $any($event.target).value)"
+                >
+                  @for (s of statutOptions; track s) {
+                    <option [value]="s">{{ statutLabels[s] }}</option>
+                  }
+                </select>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</section>
