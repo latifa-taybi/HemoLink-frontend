@@ -1,0 +1,92 @@
+@import '../../admin-shared.css';
+
+/* ── Overview page ─────────────────────────────────────────── */
+.overview-page { display: flex; flex-direction: column; gap: 24px; }
+
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.page-title { font-size: 1.5rem; font-weight: 700; color: #111827; margin: 0; }
+.page-sub   { font-size: .875rem; color: #6b7280; margin: 4px 0 0; }
+
+/* Skeleton loader */
+.loading-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.skeleton-card {
+  height: 120px; background: white; border-radius: 14px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.06);
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%; animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* KPI Cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.kpi-card {
+  background: white; border-radius: 14px; padding: 22px 20px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07); transition: transform .2s;
+}
+.kpi-card:hover { transform: translateY(-2px); }
+
+.kpi-icon-wrap {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kpi-blue .kpi-icon-wrap  { background: #dbeafe; color: #1d4ed8; }
+.kpi-green .kpi-icon-wrap { background: #dcfce7; color: #16a34a; }
+.kpi-red .kpi-icon-wrap   { background: #fee2e2; color: #dc2626; }
+.kpi-orange .kpi-icon-wrap{ background: #ffedd5; color: #ea580c; }
+
+.kpi-info { display: flex; flex-direction: column; min-width: 0; }
+.kpi-value { font-size: 1.8rem; font-weight: 800; color: #111827; line-height: 1.1; }
+.kpi-label { font-size: .8rem; font-weight: 700; color: #374151; margin-top: 2px; }
+.kpi-sub   { font-size: .72rem; color: #9ca3af; margin-top: 2px; }
+
+/* Charts */
+.charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.chart-card {
+  background: white; border-radius: 14px; padding: 24px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+}
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.chart-header h3 { font-size: 1rem; font-weight: 700; color: #111827; margin: 0; }
+.chart-badge {
+  padding: 3px 10px; background: #dcfce7; color: #166534;
+  border-radius: 12px; font-size: .72rem; font-weight: 600;
+}
+.chart-body { position: relative; height: 240px; }
+
+.waste-stats { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.ws-row { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: #374151; }
+.ws-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.dot-red   { background: #ef4444; }
+.dot-green { background: #22c55e; }
+
+/* Blood group grid */
+.blood-grid { display: grid; grid-template-columns: repeat(8,1fr); gap: 12px; }
+.blood-cell {
+  background: #fafafa; border: 1.5px solid #f3f4f6; border-radius: 12px;
+  padding: 16px 8px; text-align: center; transition: all .2s; cursor: default;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.blood-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.level-ok       { border-color: #86efac !important; background: #f0fdf4 !important; }
+.level-low      { border-color: #fde68a !important; background: #fffbeb !important; }
+.level-critical { border-color: #fca5a5 !important; background: #fef2f2 !important; }
+
+.blood-label { font-size: 1.1rem; font-weight: 800; color: #dc2626; }
+.blood-qty   { font-size: 1.3rem; font-weight: 700; color: #111827; line-height: 1; }
+.blood-sub   { font-size: .65rem; color: #9ca3af; }
+.blood-alert { font-size: .65rem; font-weight: 600; color: #dc2626; }
+.blood-ok    { font-size: .65rem; font-weight: 600; color: #16a34a; }
+
+@media (max-width: 1200px) {
+  .kpi-grid   { grid-template-columns: repeat(2,1fr); }
+  .charts-row { grid-template-columns: 1fr; }
+  .blood-grid { grid-template-columns: repeat(4,1fr); }
+}
+@media (max-width: 768px) {
+  .kpi-grid   { grid-template-columns: 1fr; }
+  .blood-grid { grid-template-columns: repeat(2,1fr); }
+}
