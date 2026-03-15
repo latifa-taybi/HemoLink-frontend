@@ -1,0 +1,109 @@
+<div class="donor-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+      <div>
+        <span class="logo-title">HémoLink</span>
+        <span class="logo-sub">Espace Donneur</span>
+      </div>
+    </div>
+
+    <!-- Donor profile chip -->
+    <div class="donor-chip" *ngIf="donor">
+      <div class="blood-badge">{{ donor.groupeSanguin }}</div>
+      <div class="chip-info">
+        <span class="chip-name">{{ donor.prenom }} {{ donor.nom }}</span>
+        <span class="chip-role">Donneur actif</span>
+      </div>
+    </div>
+
+    <!-- Blood shortage alert (US06) -->
+    <div class="alert-strip" *ngIf="alerts.length > 0">
+      <span class="alert-icon">🚨</span>
+      <div class="alert-text">
+        <strong>Alerte pénurie</strong>
+        {{ alerts[0] }}
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.path"
+         routerLinkActive="active"
+         class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Dashboard -->
+          <ng-container *ngIf="item.icon === 'dashboard'">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+          </ng-container>
+          <!-- History -->
+          <ng-container *ngIf="item.icon === 'history'">
+            <polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 0 .5-4.5"/>
+            <polyline points="3 3 3 7 7 7"/>
+          </ng-container>
+          <!-- Map -->
+          <ng-container *ngIf="item.icon === 'map'">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>
+          </ng-container>
+          <!-- Calendar -->
+          <ng-container *ngIf="item.icon === 'calendar'">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </ng-container>
+        </svg>
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="logout-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Déconnexion
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="main-area">
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">
+        <ng-container [ngSwitch]="router.url">
+          <span *ngSwitchCase="'/donor/overview'">Tableau de bord</span>
+          <span *ngSwitchCase="'/donor/history'">Historique des dons</span>
+          <span *ngSwitchCase="'/donor/find-centers'">Trouver un centre</span>
+          <span *ngSwitchCase="'/donor/appointments'">Mes Rendez-vous</span>
+          <span *ngSwitchDefault>Espace Donneur</span>
+        </ng-container>
+      </span>
+
+      <div class="topbar-right">
+        <div class="eligibility-chip eligible">
+          <span class="pulse-dot"></span> Éligible au don
+        </div>
+        <div class="user-avatar">
+
+          {{ (authService.getUser()?.prenom || '?').charAt(0).toUpperCase() }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,180 @@
+/* ─── Donor Shell (mirrors admin-shell) ──────────────────────────── */
+.donor-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f0f2f8;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────────── */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1a0a0a 0%, #2d0f0f 60%, #1a0a0a 100%);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  position: relative;
+}
+
+.logo-icon svg { width: 24px; height: 24px; }
+
+.logo-title { display: block; font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: 0.02em; }
+.logo-sub   { display: block; font-size: 0.7rem; color: rgba(248,113,113,0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 1px; }
+
+/* ─── Donor profile chip ─────────────────────────────────────────── */
+.donor-chip {
+  margin: 16px 12px;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.blood-badge {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 800; color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+}
+
+.chip-info { min-width: 0; }
+.chip-name  { display: block; font-size: 0.85rem; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-role  { display: block; font-size: 0.7rem; color: rgba(248,113,113,0.7); margin-top: 1px; }
+
+/* ─── Nav ─────────────────────────────────────────────────────────── */
+.sidebar-nav {
+  flex: 1; padding: 12px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none; font-size: 0.875rem; font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover { background: rgba(220,38,38,0.15); color: #fca5a5; }
+.nav-item:hover .nav-icon { color: #fca5a5; }
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(220,38,38,0.85), rgba(185,28,28,0.85)) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+}
+
+.nav-icon { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.8; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+/* ─── Alert strip ─────────────────────────────────────────────────── */
+.alert-strip {
+  margin: 8px 12px 4px;
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.alert-text   { font-size: 0.72rem; line-height: 1.5; color: #fca5a5; }
+.alert-text strong { display: block; color: #f87171; margin-bottom: 2px; }
+
+/* ─── Footer ──────────────────────────────────────────────────────── */
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(220,38,38,0.15);
+}
+
+.logout-btn {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: 10px; border: none;
+  background: transparent; color: rgba(255,255,255,0.5);
+  font-size: 0.875rem; font-weight: 500; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.logout-btn:hover { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+/* ─── Main Area ───────────────────────────────────────────────────── */
+.main-area {
+  margin-left: 260px; flex: 1;
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* ─── Topbar ──────────────────────────────────────────────────────── */
+.topbar {
+  height: 64px; background: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.topbar-title { font-size: 1.1rem; font-weight: 700; color: #111827; }
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.eligibility-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 700;
+}
+
+.eligible    { background: #dcfce7; color: #166534; }
+.not-eligible { background: #fef2f2; color: #991b1b; }
+
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+.eligible    .pulse-dot { background: #22c55e; }
+.not-eligible .pulse-dot { background: #ef4444; }
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.user-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  color: white; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem;
+}
+
+/* ─── Page Content ────────────────────────────────────────────────── */
+.page-content { flex: 1; padding: 28px; overflow-y: auto; }
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { width: 220px; }
+  .main-area { margin-left: 220px; }
+}
