@@ -1,0 +1,84 @@
+<div class="history-page" *ngIf="!loading">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Historique des dons</h1>
+      <p class="page-sub">Retrouvez l'ensemble de vos dons et leur impact.</p>
+    </div>
+  </div>
+
+  <!-- Impact Banner -->
+  <div class="impact-banner" *ngIf="history.length > 0">
+    <div class="impact-text">
+      <h3>🩸 Votre impact en chiffres</h3>
+      <p>Merci pour votre générosité. Chaque don compte.</p>
+    </div>
+    <div class="impact-kpis">
+      <div class="impact-kpi">
+        <span class="big">{{ history.length }}</span>
+        <span class="small">Dons totaux</span>
+      </div>
+      <div class="impact-kpi">
+        <span class="big">{{ history.length * 3 }}</span>
+        <span class="small">Vies sauvées</span>
+      </div>
+      <div class="impact-kpi">
+        <span class="big">{{ history.length * 450 }} ml</span>
+        <span class="small">Sang donné</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card" *ngIf="history.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Date du don</th>
+          <th>Lieu</th>
+          <th>Volume</th>
+          <th>Statut</th>
+          <th>Impact</th>
+        </tr>
+
+      </thead>
+      <tbody>
+        <tr *ngFor="let don of history">
+          <td><strong>{{ don.dateDon | date:'dd MMMM yyyy':'':'fr' }}</strong></td>
+          <td>
+            <span style="font-weight:600; color:#4b5563;">
+              {{ don.lieu || '—' }}
+            </span>
+          </td>
+
+          <td>450 ml</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(don.statut)">
+              {{ getStatusLabel(don.statut) }}
+            </span>
+          </td>
+          <td>
+            <span class="lives-chip" *ngIf="don.statut === 'TRANSFUSEE'">
+              ❤️ 3 vies sauvées
+            </span>
+            <span *ngIf="don.statut !== 'TRANSFUSEE'" style="color:#9ca3af;font-size:0.8rem">—</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="history.length === 0">
+    <div class="empty-icon">🩸</div>
+    <h3>Aucun don enregistré</h3>
+    <p>Votre premier don sera le début d'une belle aventure.</p>
+    <button class="empty-cta" [routerLink]="'/donor/appointments'">Réserver mon premier don</button>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading">
+  <div class="skeleton-card"></div>
+  <div class="skeleton-card"></div>
+  <div class="skeleton-card"></div>
+</div>
