@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HospitalService, StatutCommande, CreateCommandeDto } from '../../../services/hospital.service';
 import { GroupeSanguin } from '../../../services/labo.service';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-hospital-create-order',
@@ -25,7 +25,7 @@ export class HospitalCreateOrderComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private hospitalService: HospitalService,
-    private auth: Auth,
+    private auth: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {

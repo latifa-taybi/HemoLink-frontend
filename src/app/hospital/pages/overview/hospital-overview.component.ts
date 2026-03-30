@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HospitalService, CommandeSang, StatutCommande } from '../../../services/hospital.service';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-hospital-overview',
@@ -25,7 +25,7 @@ export class HospitalOverviewComponent implements OnInit {
 
   constructor(
     private hospitalService: HospitalService,
-    private auth: Auth,
+    private auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 

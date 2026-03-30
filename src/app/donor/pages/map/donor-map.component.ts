@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AdminCentersService } from '../../../admin/services/admin-centers.service';
 import { CentreCollecte } from '../../../admin/models/admin.models';
 import * as L from 'leaflet';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-donor-map',
@@ -15,7 +15,7 @@ import { Auth } from '../../../services/auth';
 })
 export class DonorMapComponent implements OnInit, AfterViewInit {
   private readonly centersService = inject(AdminCentersService);
-  private readonly authService = inject(Auth);
+  private readonly authService = inject(AuthService);
   private readonly cdr = inject(ChangeDetectorRef);
   
   centers: CentreCollecte[] = [];
@@ -25,24 +25,43 @@ export class DonorMapComponent implements OnInit, AfterViewInit {
   constructor() {}
 
   ngOnInit(): void {
+    // Vérifier si authentifié
+    if (!this.authService.isAuthenticated()) {
+      this.loading = false;
+      this.cdr.markForCheck();
+      return;
+    }
+
     const user = this.authService.getUser();
-    if (user && user.id > 0) {
-      this.centersService.getAll().subscribe({
-        next: (data) => {
-          this.centers = data;
-          this.loading = false;
-          if (this.map) this.addMarkers();
-          this.cdr.markForCheck();
-        },
+    
+    // Si pas de user en mémoire, but token existe, fetch depuis backend
+    if (!user || !user.id) {
+      this.authService.fetchUserData().subscribe({
+        next: () => this.loadCentersList(),
         error: () => {
           this.loading = false;
           this.cdr.markForCheck();
         }
       });
     } else {
-      this.loading = false;
-      this.cdr.markForCheck();
+      this.loadCentersList();
     }
+  }
+
+  private loadCentersList(): void {
+    this.centersService.getAll().subscribe({
+      next: (data) => {
+        this.centers = data;
+        this.loading = false;
+        if (this.map) this.addMarkers();
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error("Erreur centres:", err);
+        this.loading = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   ngAfterViewInit(): void {

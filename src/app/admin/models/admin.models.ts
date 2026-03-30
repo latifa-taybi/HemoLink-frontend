@@ -1,10 +1,11 @@
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
 export enum RoleUtilisateur {
-  DONNEUR = 'DONNEUR',
-  TECHNICIEN_LABO = 'TECHNICIEN_LABO',
-  PERSONNEL_HOPITAL = 'PERSONNEL_HOPITAL',
   ADMIN = 'ADMIN',
+  DONNEUR = 'DONNEUR',
+  HOPITAL = 'HOPITAL',
+  PERSONNEL_CENTRE = 'PERSONNEL_CENTRE',
+  LABO_PERSONNEL = 'LABO_PERSONNEL',
 }
 
 export enum StatutSang {

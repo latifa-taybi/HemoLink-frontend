@@ -1,8 +1,7 @@
-// Fix resolution
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Auth, UtilisateurResponseDto } from '../../services/auth';
+import { AuthService, UtilisateurResponseDto } from '../../services/auth.service';
 
 @Component({
   selector: 'app-hospital-layout',
@@ -16,7 +15,7 @@ export class HospitalLayoutComponent implements OnInit {
   isSidebarCollapsed = false;
 
   constructor(
-    private authService: Auth,
+    private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}

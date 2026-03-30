@@ -87,10 +87,10 @@
       <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
         <p class="text-blue-900">
           <strong>Note :</strong>
-          <span *ngIf="user.role === 'DONNEUR'"> Vous êtes inscrit comme donneur de sang. Merci de votre contribution ! ❤️</span>
-          <span *ngIf="user.role === 'ADMIN'"> Vous avez accès aux fonctionnalités d'administration.</span>
-          <span *ngIf="user.role === 'TECHNICIEN_LABO'"> Vous pouvez accéder aux tests de laboratoire.</span>
-          <span *ngIf="user.role === 'PERSONNEL_HOPITAL'"> Vous pouvez gérer les commandes de sang.</span>
+          <span *ngIf="user.role === RoleUtilisateur.DONNEUR"> Vous êtes inscrit comme donneur de sang. Merci de votre contribution ! ❤️</span>
+          <span *ngIf="user.role === RoleUtilisateur.ADMIN"> Vous avez accès aux fonctionnalités d'administration.</span>
+          <span *ngIf="user.role === RoleUtilisateur.LABO_PERSONNEL"> Vous pouvez accéder aux tests de laboratoire.</span>
+          <span *ngIf="user.role === RoleUtilisateur.HOPITAL"> Vous pouvez gérer les commandes de sang.</span>
         </p>
       </div>
     </div>

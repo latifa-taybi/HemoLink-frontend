@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LaboService, PocheSang, TestLaboDto } from '../../../services/labo.service';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-labo-tests',
@@ -33,7 +33,7 @@ export class LaboTestsComponent implements OnInit {
 
   constructor(
     private laboService: LaboService,
-    private authService: Auth,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 

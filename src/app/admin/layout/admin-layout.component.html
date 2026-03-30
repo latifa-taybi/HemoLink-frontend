@@ -82,8 +82,11 @@
       </div>
       <div class="topbar-right">
         <div class="user-badge">
-          <div class="user-avatar">A</div>
-          <span class="user-label">Administrateur</span>
+          <div class="user-avatar">{{ (authService.user$ | async)?.prenom?.[0]?.toUpperCase() || 'A' }}</div>
+          <div class="user-info">
+            <span class="user-name">{{ (authService.user$ | async)?.prenom }} {{ (authService.user$ | async)?.nom }}</span>
+            <span class="user-label">{{ (authService.user$ | async)?.email }}</span>
+          </div>
         </div>
       </div>
     </header>

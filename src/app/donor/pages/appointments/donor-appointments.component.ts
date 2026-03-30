@@ -6,7 +6,7 @@ import { DonorService } from '../../services/donor.service';
 import { AdminCentersService } from '../../../admin/services/admin-centers.service';
 import { Donneur, RendezVous, CreateRendezVousDto, StatutRendezVous } from '../../models/donor.models';
 import { CentreCollecte } from '../../../admin/models/admin.models';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-donor-appointments',
@@ -18,7 +18,7 @@ import { Auth } from '../../../services/auth';
 export class DonorAppointmentsComponent implements OnInit {
   private readonly donorService = inject(DonorService);
   private readonly centersService = inject(AdminCentersService);
-  private readonly authService = inject(Auth);
+  private readonly authService = inject(AuthService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
 
@@ -27,6 +27,8 @@ export class DonorAppointmentsComponent implements OnInit {
   centers: CentreCollecte[] = [];
   loading = true;
   showModal = false;
+  error: string | null = null;
+  bookingError: string | null = null;
 
   newAppointment: CreateRendezVousDto = {
     dateHeure: '',
@@ -38,35 +40,82 @@ export class DonorAppointmentsComponent implements OnInit {
 
   ngOnInit(): void {
     const user = this.authService.getUser();
-    if (user && user.id > 0) {
-      // First load centers
-      this.centersService.getAll().subscribe({
-        next: (c) => {
-          this.centers = c;
-          
-          // Check queryParams "center"
-          this.route.queryParams.subscribe(params => {
-            if (params['center']) {
-              this.newAppointment.centreId = Number(params['center']);
-              this.showModal = true;
-            }
-          });
+    
+    // Vérifier si authentifié
+    if (!this.authService.isAuthenticated()) {
+      this.error = 'Veuillez vous connecter.';
+      this.stopLoading();
+      return;
+    }
 
-          // Fetch profile and appointments
-          this.donorService.getProfile(user.id).subscribe({
-            next: (d) => {
-              this.donor = d;
-              this.newAppointment.donneurId = d.id;
-              this.loadAppointments(d.id);
-            },
-            error: () => this.stopLoading()
-          });
-        },
-        error: () => this.stopLoading()
+    // Si pas de user en mémoire, but token existe, fetch depuis backend
+    if (!user || !user.id) {
+      this.authService.fetchUserData().subscribe({
+        next: (u) => this.loadDonorData(u),
+        error: (err) => {
+          console.error("Erreur récupération user:", err);
+          this.error = 'Impossible de charger votre profil.';
+          this.stopLoading();
+        }
       });
     } else {
-      this.stopLoading();
+      this.loadDonorData(user);
     }
+  }
+
+  private loadDonorData(user: any): void {
+    // Vérifier que l'ID est valide (pas 0, pas négatif, pas NaN)
+    if (!user || !user.id || user.id <= 0 || isNaN(user.id)) {
+      this.error = 'Erreur: ID utilisateur invalide ou manquant. Veuillez vous reconnecter.';
+      this.stopLoading();
+      console.error('ID utilisateur invalide:', user?.id, 'isNaN:', isNaN(user?.id));
+      return;
+    }
+
+    // First load centers
+    this.centersService.getAll().subscribe({
+      next: (c) => {
+        this.centers = c;
+        this.error = null;
+        
+        // Check queryParams "center"
+        this.route.queryParams.subscribe(params => {
+          if (params['center']) {
+            this.newAppointment.centreId = Number(params['center']);
+            this.showModal = true;
+          }
+        });
+
+        // Fetch profile and appointments
+        this.donorService.getProfile(user.id).subscribe({
+          next: (d) => {
+            this.donor = d;
+            this.newAppointment.donneurId = d.id;
+            this.loadAppointments(d.id);
+          },
+          error: (err) => {
+            console.error("Erreur profil:", err);
+            if (err.status === 404) {
+              this.error = `Donneur non trouvé (ID: ${user.id}). Vérifiez que vous êtes inscrit.`;
+            } else {
+              this.error = 'Impossible de charger votre profil.';
+            }
+            this.stopLoading();
+          }
+        });
+      },
+      error: (err) => {
+        console.error("Erreur centres:", err);
+        let errorMsg = 'Impossible de charger les centres de collecte.';
+        if (err.status === 500) {
+          errorMsg += ' Le serveur backend n\'implémente pas l\'endpoint /api/centres-collecte.';
+        } else if (err.status === 0) {
+          errorMsg += ' Impossible de se connecter au backend.';
+        }
+        this.error = errorMsg;
+        this.stopLoading();
+      }
+    });
   }
 
   loadAppointments(donneurId: number): void {
@@ -75,7 +124,11 @@ export class DonorAppointmentsComponent implements OnInit {
         this.appointments = data.sort((a,b) => new Date(b.dateHeure).getTime() - new Date(a.dateHeure).getTime());
         this.stopLoading();
       },
-      error: () => this.stopLoading()
+      error: (err) => {
+        console.error("Erreur rendez-vous:", err);
+        this.appointments = [];
+        this.stopLoading();
+      }
     });
   }
 
@@ -86,29 +139,46 @@ export class DonorAppointmentsComponent implements OnInit {
 
   openBookingModal(): void {
     if (!this.donor) return;
+    if (this.centers.length === 0) {
+      this.bookingError = 'Aucun centre disponible. Vérifiez le serveur.';
+      return;
+    }
     this.newAppointment = {
       dateHeure: '',
       centreId: this.centers[0]?.id || 0,
       donneurId: this.donor.id
     };
+    this.bookingError = null;
     this.showModal = true;
     this.cdr.markForCheck();
   }
 
   submitBooking(): void {
-    if (!this.newAppointment.dateHeure || !this.newAppointment.centreId) return;
+    if (!this.newAppointment.dateHeure || !this.newAppointment.centreId) {
+      this.bookingError = 'Veuillez remplir tous les champs.';
+      return;
+    }
     
-    this.loading = true; // prevent double submission
+    this.loading = true;
+    this.bookingError = null;
     this.cdr.markForCheck();
 
     this.donorService.bookAppointment(this.newAppointment).subscribe({
       next: () => {
         if (this.donor) this.loadAppointments(this.donor.id);
         this.showModal = false;
-        // loading state will reset when loadAppointments finishes
       },
       error: (err) => {
-        console.error('Erreur de réservation', err);
+        console.error('Erreur réservation:', err);
+        let errorMsg = 'Erreur lors de la réservation.';
+        if (err.status === 400) {
+          errorMsg = 'Les données envoyées sont invalides.';
+        } else if (err.status === 409) {
+          errorMsg = 'Ce créneau n\'est plus disponible.';
+        } else if (err.status === 500) {
+          errorMsg = 'Erreur serveur. Essayez plus tard.';
+        }
+        this.bookingError = errorMsg;
         this.stopLoading();
       }
     });

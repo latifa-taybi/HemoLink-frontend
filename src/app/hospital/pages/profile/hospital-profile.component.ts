@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HospitalService, Hopital } from '../../../services/hospital.service';
-import { Auth } from '../../../services/auth';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-hospital-profile',
@@ -22,7 +22,7 @@ export class HospitalProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private hospitalService: HospitalService,
-    private auth: Auth,
+    private auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {
     this.profileForm = this.fb.group({

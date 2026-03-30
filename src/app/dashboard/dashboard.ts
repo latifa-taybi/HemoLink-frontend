@@ -1,30 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { Auth, RoleUtilisateur } from '../services/auth';
+import { AuthService, RoleUtilisateur } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  constructor(
-    public authService: Auth,
-    private router: Router
-  ) {}
+  // Make enum available in template
+  RoleUtilisateur = RoleUtilisateur;
+
+  constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/auth/login']);
       return;
     }
-    
-    const user = this.authService.getUser();
-    if (user?.role === RoleUtilisateur.ADMIN) {
-      this.router.navigate(['/admin']);
-    }
+    if (this.authService.getUser()?.role === RoleUtilisateur.ADMIN) this.router.navigate(['/admin']);
   }
 
   logout(): void {
@@ -35,42 +32,29 @@ export class Dashboard implements OnInit {
   getRoleLabel(role: RoleUtilisateur): string {
     const labels: Record<RoleUtilisateur, string> = {
       [RoleUtilisateur.DONNEUR]: 'Donneur de sang',
-      [RoleUtilisateur.TECHNICIEN_LABO]: 'Technicien Lab',
-      [RoleUtilisateur.PERSONNEL_HOPITAL]: 'Personnel Hôpital',
+      [RoleUtilisateur.LABO_PERSONNEL]: 'Personnel Laboratoire',
+      [RoleUtilisateur.HOPITAL]: 'Personnel Hôpital',
       [RoleUtilisateur.ADMIN]: 'Administrateur',
-      [RoleUtilisateur.PERSONNEL_CENTRE]: 'Personnel Centre'
+      [RoleUtilisateur.PERSONNEL_CENTRE]: 'Personnel Centre Collecte'
     };
     return labels[role] || role;
   }
 
   formatDate(dateStr: string): string {
     try {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      return new Date(dateStr).toLocaleDateString('fr-FR', {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
       });
-    } catch {
-      return dateStr;
-    }
+    } catch { return dateStr; }
   }
 
   getActionUrl(role: RoleUtilisateur): string {
     switch (role) {
-      case RoleUtilisateur.ADMIN:
-        return '/admin';
-      case RoleUtilisateur.TECHNICIEN_LABO:
-        return '/labo';
-      case RoleUtilisateur.PERSONNEL_HOPITAL:
-        return '/hopital';
-      case RoleUtilisateur.PERSONNEL_CENTRE:
-        return '/personnel';
-      case RoleUtilisateur.DONNEUR:
-      default:
-        return '/donneur';
+      case RoleUtilisateur.ADMIN: return '/admin';
+      case RoleUtilisateur.LABO_PERSONNEL: return '/labo';
+      case RoleUtilisateur.HOPITAL: return '/hopital';
+      case RoleUtilisateur.PERSONNEL_CENTRE: return '/centre';
+      default: return '/donor';
     }
   }
 }

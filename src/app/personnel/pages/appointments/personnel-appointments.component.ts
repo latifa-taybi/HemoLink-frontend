@@ -27,12 +27,9 @@ export class PersonnelAppointmentsComponent implements OnInit {
         this.loading = false;
         this.cdr.markForCheck();
       },
-      error: () => {
-        // En mode démo on mock temporairement
-        this.rendezVous = [
-          { id: 101, centreCollecteId: 1, donneurId: 1, dateHeure: new Date().toISOString(), statut: 'PLANIFIE', donneurPrenom: 'Jean', donneurNom: 'Dupont' },
-          { id: 102, centreCollecteId: 1, donneurId: 2, dateHeure: new Date(Date.now() + 3600000).toISOString(), statut: 'PLANIFIE', donneurPrenom: 'Claire', donneurNom: 'Lefevre' }
-        ];
+      error: (err) => {
+        console.error("Erreur de récupération des rendez-vous réels du backend", err);
+        this.rendezVous = [];
         this.loading = false;
         this.cdr.markForCheck();
       }

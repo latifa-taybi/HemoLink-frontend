@@ -52,13 +52,8 @@ export class PersonnelCreateDonationComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        // En mode démo, on simule le succès si le backend pète
-        if (err.status === 0 || err.status === 404) {
-          this.showMessage('[Simulation] Don enregistré avec succès !', 'success');
-          this.donForm.reset({ volumeMl: 450 });
-        } else {
-          this.showMessage('Erreur : ' + (err.error?.message || err.message), 'error');
-        }
+        const errorMessage = err.error?.message || err.message || 'Une erreur est survenue lors de l\'enregistrement.';
+        this.showMessage('Erreur : ' + errorMessage, 'error');
         this.loading = false;
         this.cdr.markForCheck();
       }

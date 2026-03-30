@@ -1,0 +1,189 @@
+<div class="min-h-screen bg-white">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-2 text-red-600 font-bold text-lg">
+        <span class="text-2xl animate-pulse">🩸</span>
+        <span>HémoLink</span>
+      </div>
+      <div class="flex gap-3 items-center">
+        <a routerLink="/auth/login" class="text-gray-700 hover:text-red-600 transition text-sm font-medium px-3 py-2">
+          Connexion
+        </a>
+        <a routerLink="/auth/register" class="bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition">
+          S'inscrire
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden py-20 px-6">
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-red-100 rounded-full opacity-20 blur-3xl"></div>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div class="animate-slideInLeft">
+        <h1 class="text-5xl lg:text-6xl font-black text-gray-900 mb-4 leading-tight">
+          La Plateforme de Gestion du Sang du <span class="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">21ème Siècle</span>
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+          Simplifiez la chaîne d'approvisionnement en sang. Connectez donneurs, laboratoires et hôpitaux pour sauver plus de vies.
+        </p>
+        <div class="flex gap-4 mb-8 flex-wrap">
+          <a routerLink="/auth/register" class="bg-gradient-to-r from-red-600 to-red-800 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-2xl transition transform hover:-translate-y-1">
+            Commencer Gratuitement
+          </a>
+          <a routerLink="/auth/login" class="bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition">
+            Explorer
+          </a>
+        </div>
+        <div class="flex gap-6 text-sm text-gray-600 flex-wrap">
+          <span>✓ Gratuit pour les donneurs</span>
+          <span>✓ Sécurisé et certifié</span>
+          <span>✓ Support 24/7</span>
+        </div>
+      </div>
+      <div class="relative h-80 flex items-center justify-center">
+        <div class="w-40 h-40 bg-gradient-to-br from-red-500 to-red-700 rounded-full animate-pulse shadow-2xl"></div>
+        <div class="absolute w-40 h-40 bg-red-200 rounded-full opacity-50 animate-pulse delay-100"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Stats -->
+  <section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Impact Mesurable</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (benefit of benefits; track benefit.number) {
+          <div class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl border border-gray-200 text-center animate-slideUp hover:shadow-lg transition">
+            <div class="text-4xl font-black bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent mb-2">
+              {{ benefit.number }}
+            </div>
+            <div class="text-gray-600 font-semibold">{{ benefit.text }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="bg-gray-50 py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Fonctionnalités Puissantes</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Tout ce dont vous avez besoin pour optimiser votre gestion du sang</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (feature of features; track feature.id) {
+          <div class="bg-white p-8 rounded-xl border border-gray-200 text-center hover:shadow-xl hover:border-red-300 transition-all hover:-translate-y-2">
+            <div class="text-5xl mb-4">{{ feature.icon }}</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ feature.title }}</h3>
+            <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Trusted by Professionals</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Découvrez ce que nos utilisateurs en pensent</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (testimonial of testimonials; track testimonial.name) {
+          <div class="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-lg transition">
+            <div class="flex gap-4 mb-4">
+              <div class="text-4xl w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                {{ testimonial.avatar }}
+              </div>
+              <div>
+                <div class="font-bold text-gray-900">{{ testimonial.name }}</div>
+                <div class="text-sm text-gray-600">{{ testimonial.role }} - {{ testimonial.org }}</div>
+              </div>
+            </div>
+            <p class="text-gray-700 italic leading-relaxed">"{{ testimonial.message }}"</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-gray-50 py-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Questions Fréquentes</h2>
+        <p class="text-xl text-gray-600">Tout ce que vous devez savoir sur HémoLink</p>
+      </div>
+      <div class="space-y-3">
+        @for (item of faqItems; let i = $index; track i) {
+          <div class="border border-gray-200 rounded-lg overflow-hidden bg-white hover:border-red-300 transition">
+            <button 
+              class="w-full px-6 py-4 text-left font-semibold text-gray-900 hover:bg-red-50 transition flex justify-between items-center"
+              (click)="toggleFaq(i)">
+              <span>{{ item.question }}</span>
+              <span class="text-red-600 transition" [class.rotate-180]="expandedFaq === i">
+                @if (expandedFaq === i) { − } @else { + }
+              </span>
+            </button>
+            @if (expandedFaq === i) {
+              <div class="px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                {{ item.answer }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-gradient-to-r from-red-600 to-red-800 py-24 px-6 text-white relative overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl"></div>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <h2 class="text-5xl font-bold mb-4">Prêt à Transformer votre Système?</h2>
+      <p class="text-xl opacity-95 mb-8">Rejoignez les organisations qui sauvent des vies avec HémoLink</p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a routerLink="/auth/register" class="bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:shadow-2xl transition transform hover:-translate-y-1">
+          Commencer Maintenant
+        </a>
+        <a routerLink="/auth/login" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition">
+          Se Connecter
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <h4 class="text-white font-bold mb-3">HémoLink</h4>
+        <p class="text-sm">Révolutionner la gestion du sang, sauver des vies.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-3">Liens</h4>
+        <a routerLink="/auth/login" class="text-sm hover:text-red-400 transition block mb-2">Connexion</a>
+        <a routerLink="/auth/register" class="text-sm hover:text-red-400 transition block mb-2">Inscription</a>
+        <a href="#" class="text-sm hover:text-red-400 transition">À Propos</a>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-3">Support</h4>
+        <p class="text-sm mb-2">📧 info@hemolink.com</p>
+        <p class="text-sm">💬 support@hemolink.com</p>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-3">Légal</h4>
+        <a href="#" class="text-sm hover:text-red-400 transition block mb-2">Conditions d'utilisation</a>
+        <a href="#" class="text-sm hover:text-red-400 transition">Politique de confidentialité</a>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 pt-8 text-center text-sm">
+      <p>&copy; 2026 HémoLink. Tous droits réservés.</p>
+    </div>
+  </footer>
+</div>

@@ -28,19 +28,22 @@ export class AdminUsersComponent implements OnInit {
   submitting = false;
 
   readonly roles = Object.values(RoleUtilisateur);
+  readonly creatableRoles = Object.values(RoleUtilisateur).filter(role => role !== RoleUtilisateur.ADMIN);
   readonly roleLabels: Record<RoleUtilisateur, string> = {
     [RoleUtilisateur.ADMIN]: 'Administrateur',
-    [RoleUtilisateur.DONNEUR]: 'Donneur',
-    [RoleUtilisateur.TECHNICIEN_LABO]: 'Technicien Labo',
-    [RoleUtilisateur.PERSONNEL_HOPITAL]: 'Personnel Hôpital',
+    [RoleUtilisateur.DONNEUR]: 'Donneur de sang',
+    [RoleUtilisateur.LABO_PERSONNEL]: 'Personnel Laboratoire',
+    [RoleUtilisateur.HOPITAL]: 'Personnel Hôpital',
+    [RoleUtilisateur.PERSONNEL_CENTRE]: 'Personnel Centre Collecte',
   };
 
   readonly filterTabs = [
     { key: 'ALL', label: 'Tous' },
     { key: RoleUtilisateur.ADMIN, label: 'Admins' },
     { key: RoleUtilisateur.DONNEUR, label: 'Donneurs' },
-    { key: RoleUtilisateur.TECHNICIEN_LABO, label: 'Labos' },
-    { key: RoleUtilisateur.PERSONNEL_HOPITAL, label: 'Hôpitaux' },
+    { key: RoleUtilisateur.LABO_PERSONNEL, label: 'Labos' },
+    { key: RoleUtilisateur.HOPITAL, label: 'Hôpitaux' },
+    { key: RoleUtilisateur.PERSONNEL_CENTRE, label: 'Centres' },
   ];
 
   constructor(private usersService: AdminUsersService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {

@@ -136,7 +136,7 @@
             <div class="form-group">
               <label>Rôle *</label>
               <select formControlName="role" class="form-input">
-                @for (role of roles; track role) {
+                @for (role of creatableRoles; track role) {
                   <option [value]="role">{{ roleLabels[role] }}</option>
                 }
               </select>

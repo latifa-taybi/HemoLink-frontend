@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UtilisateurResponseDto } from './auth';
+import { UtilisateurResponseDto } from './auth.service';
 
 export enum GroupeSanguin {
   A_POSITIF = 'A_POS',

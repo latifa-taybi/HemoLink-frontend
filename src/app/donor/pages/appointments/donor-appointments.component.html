@@ -1,102 +1,129 @@
-<div class="appointments-page" *ngIf="!loading">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Mes Rendez-vous</h1>
-      <p class="page-sub">Gérez vos réservations pour vos prochains dons de sang.</p>
-    </div>
-    <div class="header-actions">
-      <button class="btn-new-rdv" (click)="openBookingModal()">
-        <span>+</span> Nouveau Rendez-vous
-      </button>
-    </div>
-  </div>
-
-  <!-- Appointments Grid -->
-  <div class="appointments-grid" *ngIf="appointments.length > 0">
-    <div *ngFor="let rdv of appointments" class="rdv-card status-{{rdv.statut}}">
-      <div class="rdv-header">
-        <div class="rdv-date">
-          <span class="rdv-day">{{ rdv.dateHeure | date:'dd MMM yyyy':'':'fr' }}</span>
-          <span class="rdv-time">{{ rdv.dateHeure | date:'HH:mm':'':'fr' }}</span>
-        </div>
-        <span class="badge-status {{rdv.statut}}">
-          {{ getStatusLabel(rdv.statut) }}
-        </span>
-      </div>
-      
-      <div class="rdv-info">
-        <div class="info-row">
-          <span class="info-icon">🏥</span>
-          <div class="info-text">
-            <strong>Centre de collecte</strong>
-            <span>Centre ID #{{ rdv.centreId }}</span> <!-- Fallback when name isn't hydrated -->
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">📍</span>
-          <div class="info-text">
-            <strong>Rendez-vous sur place</strong>
-            <span>Présentez-vous 10 min en avance</span>
-          </div>
-        </div>
+<div class="appointments-page">
+  <!-- Error Alert -->
+  @if (error) {
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+      <div>
+        <strong>Erreur:</strong> {{ error }}
       </div>
     </div>
-  </div>
+  }
 
-  <!-- Empty State -->
-  <div class="empty-state" *ngIf="appointments.length === 0">
-    <div style="font-size:3rem;margin-bottom:16px;">📅</div>
-    <h3 style="font-size:1.1rem;font-weight:700;color:#111827;margin:0 0 8px;">Aucun rendez-vous prévu</h3>
-    <p style="font-size:0.875rem;color:#6b7280;margin:0 0 24px;">Il est temps de planifier votre prochain don de sang.</p>
-    <button class="btn-new-rdv" style="margin:0 auto;" (click)="openBookingModal()">
-      Réserver un créneau
-    </button>
-  </div>
-</div>
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="loading-grid">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+  } @else {
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Mes Rendez-vous</h1>
+        <p class="page-sub">Gérez vos réservations pour vos prochains dons de sang.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-new-rdv" (click)="openBookingModal()">
+          <span>+</span> Nouveau Rendez-vous
+        </button>
+      </div>
+    </div>
 
-<!-- Loading State -->
-<div class="loading-grid" *ngIf="loading">
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
-  <div class="skeleton-card"></div>
+    <!-- Appointments Grid -->
+    @if (appointments.length > 0) {
+      <div class="appointments-grid">
+        @for (rdv of appointments; track rdv.id) {
+          <div class="rdv-card status-{{rdv.statut}}">
+            <div class="rdv-header">
+              <div class="rdv-date">
+                <span class="rdv-day">{{ rdv.dateHeure | date:'dd MMM yyyy':'':'fr' }}</span>
+                <span class="rdv-time">{{ rdv.dateHeure | date:'HH:mm':'':'fr' }}</span>
+              </div>
+              <span class="badge-status {{rdv.statut}}">
+                {{ getStatusLabel(rdv.statut) }}
+              </span>
+            </div>
+            
+            <div class="rdv-info">
+              <div class="info-row">
+                <span class="info-icon">🏥</span>
+                <div class="info-text">
+                  <strong>Centre de collecte</strong>
+                  <span>Centre ID #{{ rdv.centreId }}</span>
+                </div>
+              </div>
+              <div class="info-row">
+                <span class="info-icon">📍</span>
+                <div class="info-text">
+                  <strong>Rendez-vous sur place</strong>
+                  <span>Présentez-vous 10 min en avance</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="empty-state">
+        <div style="font-size:3rem;margin-bottom:16px;">📅</div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:#111827;margin:0 0 8px;">Aucun rendez-vous prévu</h3>
+        <p style="font-size:0.875rem;color:#6b7280;margin:0 0 24px;">Il est temps de planifier votre prochain don de sang.</p>
+        <button class="btn-new-rdv" style="margin:0 auto;" (click)="openBookingModal()">
+          Réserver un créneau
+        </button>
+      </div>
+    }
+  }
 </div>
 
 <!-- Booking Modal -->
-<div class="modal-overlay" *ngIf="showModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 class="modal-title">Réserver un créneau</h3>
-      <button class="btn-close" (click)="showModal = false">&times;</button>
-    </div>
-    
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="centre">Centre de collecte *</label>
-        <select id="centre" class="form-control" [(ngModel)]="newAppointment.centreId" required>
-          <option [ngValue]="0" disabled>Sélectionnez un centre...</option>
-          <option *ngFor="let c of centers" [ngValue]="c.id">
-            {{ c.nom }} ({{ c.ville }})
-          </option>
-        </select>
+@if (showModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Réserver un créneau</h3>
+        <button class="btn-close" (click)="showModal = false">&times;</button>
       </div>
       
-      <div class="form-group">
-        <label for="date-heure">Date et Heure du rendez-vous *</label>
-        <input type="datetime-local" id="date-heure" class="form-control" [(ngModel)]="newAppointment.dateHeure" required>
-        <small style="color:#6b7280;font-size:0.75rem;margin-top:4px;">
-          Note: Vous devez choisir un créneau pendant les heures d'ouverture.
-        </small>
+      <div class="modal-body">
+        <!-- Booking Error -->
+        @if (bookingError) {
+          <div class="alert alert-error" style="margin-bottom: 1rem;">
+            <strong>{{ bookingError }}</strong>
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="centre">Centre de collecte *</label>
+          <select id="centre" class="form-control" [(ngModel)]="newAppointment.centreId" required [disabled]="centers.length === 0">
+            <option [ngValue]="0" disabled>Sélectionnez un centre...</option>
+            @for (c of centers; track c.id) {
+              <option [ngValue]="c.id">
+                {{ c.nom }} ({{ c.ville }})
+              </option>
+            }
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="date-heure">Date et Heure du rendez-vous *</label>
+          <input type="datetime-local" id="date-heure" class="form-control" [(ngModel)]="newAppointment.dateHeure" required>
+          <small style="color:#6b7280;font-size:0.75rem;margin-top:4px;">
+            Note: Vous devez choisir un créneau pendant les heures d'ouverture.
+          </small>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="showModal = false">Annuler</button>
+        <button type="button" class="btn-submit" 
+                (click)="submitBooking()" 
+                [disabled]="!newAppointment.dateHeure || !newAppointment.centreId || newAppointment.centreId === 0 || loading">
+          {{ loading ? 'Réservation...' : 'Confirmer le rendez-vous' }}
+        </button>
       </div>
     </div>
-    
-    <div class="modal-footer">
-      <button type="button" class="btn-cancel" (click)="showModal = false">Annuler</button>
-      <button type="button" class="btn-submit" 
-              (click)="submitBooking()" 
-              [disabled]="!newAppointment.dateHeure || !newAppointment.centreId || newAppointment.centreId === 0 || loading">
-        {{ loading ? 'Réservation...' : 'Confirmer le rendez-vous' }}
-      </button>
-    </div>
   </div>
-</div>
+}

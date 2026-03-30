@@ -19,6 +19,7 @@ export class PersonnelOverviewComponent implements OnInit {
   };
   
   loading = true;
+  error: string | null = null;
 
   constructor(
     private personnelService: PersonnelService,
@@ -35,6 +36,9 @@ export class PersonnelOverviewComponent implements OnInit {
     // Pour filtrer les RDV d'aujourd'hui
     const aujourdhuiStr = new Date().toISOString().split('T')[0];
 
+    this.error = null;
+    this.loading = true;
+
     forkJoin({
       rdvs: this.personnelService.getRendezVousDuCentre(centreId),
       dons: this.personnelService.getDonsParCentre(centreId)
@@ -48,16 +52,24 @@ export class PersonnelOverviewComponent implements OnInit {
           rdvTermines: rdvsJour.filter(r => r.statut === 'TERMINE').length,
           donsRecueillis: data.dons.filter(d => d.dateDon.startsWith(aujourdhuiStr)).length
         };
+        this.error = null;
         this.loading = false;
         this.cdr.markForCheck();
       },
-      error: () => {
-        // En cas d'erreur de développement/Back-end, on mock les chiffres pour continuer à voir l'UI
-        this.kpis = {
-          rdvAujourdhui: 12,
-          rdvTermines: 4,
-          donsRecueillis: 5
-        };
+      error: (err) => {
+        console.error("Erreur backend - vérifiez les endpoints:", err);
+        
+        // Messages d'erreur user-friendly
+        let errorMsg = 'Impossible de charger les données du centre.';
+        if (err.status === 404) {
+          errorMsg = 'Le centre de prélèvement n\'a pas été trouvé.';
+        } else if (err.status === 500) {
+          errorMsg = 'Erreur serveur - vérifiez que le backend implémente les endpoints /api/dons/centre/{id} et /api/rendez-vous';
+        } else if (err.status === 0) {
+          errorMsg = 'Impossible de se connecter au serveur backend.';
+        }
+        
+        this.error = errorMsg;
         this.loading = false;
         this.cdr.markForCheck();
       }
