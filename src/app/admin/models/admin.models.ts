@@ -25,14 +25,14 @@ export enum StatutCommande {
 }
 
 export enum GroupeSanguin {
-  A_POSITIF = 'A_POSITIF',
-  A_NEGATIF = 'A_NEGATIF',
-  B_POSITIF = 'B_POSITIF',
-  B_NEGATIF = 'B_NEGATIF',
-  AB_POSITIF = 'AB_POSITIF',
-  AB_NEGATIF = 'AB_NEGATIF',
-  O_POSITIF = 'O_POSITIF',
-  O_NEGATIF = 'O_NEGATIF',
+  A_POSITIF = 'A_POS',
+  A_NEGATIF = 'A_NEG',
+  B_POSITIF = 'B_POS',
+  B_NEGATIF = 'B_NEG',
+  AB_POSITIF = 'AB_POS',
+  AB_NEGATIF = 'AB_NEG',
+  O_POSITIF = 'O_POS',
+  O_NEGATIF = 'O_NEG',
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────

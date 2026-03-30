@@ -1,0 +1,109 @@
+<div class="overview-container">
+  <div class="welcome-section">
+    <h1>Bienvenue dans votre Espace Hôpital</h1>
+    <p>Gérez vos demandes de sang et suivez vos besoins critiques en temps réel.</p>
+  </div>
+
+  <!-- Dashboard Stats -->
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="stat-icon urgent">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Besoins Urgents</span>
+        <span class="stat-value">{{ stats.urgent }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon pending">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">En Préparation</span>
+        <span class="stat-value">{{ stats.pending }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon delivered">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Total Livrées</span>
+        <span class="stat-value">{{ stats.delivered }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Recent Orders Section -->
+    <div class="grid-section">
+      <div class="section-header">
+        <h3>Commandes Récentes</h3>
+        <a routerLink="/hospital/orders" class="view-all">Voir tout</a>
+      </div>
+      
+      <div class="card">
+        <div class="loading-overlay" *ngIf="loading">Chargement...</div>
+        
+        <table class="data-table" *ngIf="!loading && recentOrders.length > 0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Groupe</th>
+              <th>Qté</th>
+              <th>Date</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of recentOrders">
+              <td class="order-id">#{{ order.id }}</td>
+              <td><span class="blood-badge">{{ order.groupeSanguin }}</span></td>
+              <td>{{ order.quantite }} poches</td>
+              <td>{{ order.dateCommande | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <span class="status-badge" [class]="getStatusClass(order.statut)">
+                  {{ order.statut }}
+                </span>
+                <span class="urgent-indicator" *ngIf="order.urgence">U</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="empty-state" *ngIf="!loading && recentOrders.length === 0">
+          <p>Aucune commande récente.</p>
+          <a routerLink="/hospital/create-order" class="btn btn-primary">Faire une demande</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="grid-section actions-section">
+      <h3>Actions Rapides</h3>
+      <div class="action-buttons">
+        <a routerLink="/hospital/create-order" class="action-card">
+          <div class="action-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <span>Nouvelle Demande</span>
+        </a>
+        <a routerLink="/hospital/profile" class="action-card">
+          <div class="action-icon">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <span>Détails Hôpital</span>
+        </a>
+      </div>
+
+      <div class="info-card">
+        <h4>Aide & Support</h4>
+        <p>En cas d'urgence absolue hors horaires, contactez le centre régional par téléphone.</p>
+        <button class="btn btn-outline">Contacter Support</button>
+      </div>
+    </div>
+  </div>
+</div>

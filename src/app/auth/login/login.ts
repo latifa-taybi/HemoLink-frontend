@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Auth } from '../../services/auth';
+import { Auth, RoleUtilisateur } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -53,10 +53,21 @@ export class Login implements OnInit {
       next: () => {
         this.loading = false;
         const user = this.authService.getUser();
-        if (user?.role === 'ADMIN') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/dashboard']);
+        switch (user?.role) {
+          case RoleUtilisateur.ADMIN:
+            this.router.navigate(['/admin']);
+            break;
+          case RoleUtilisateur.DONNEUR:
+            this.router.navigate(['/donor']);
+            break;
+          case RoleUtilisateur.TECHNICIEN_LABO:
+            this.router.navigate(['/labo']);
+            break;
+          case RoleUtilisateur.PERSONNEL_HOPITAL:
+            this.router.navigate(['/hopital']);
+            break;
+          default:
+            this.router.navigate(['/dashboard']);
         }
       },
       error: (err) => {

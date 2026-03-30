@@ -9,7 +9,8 @@ export enum RoleUtilisateur {
   DONNEUR = 'DONNEUR',
   TECHNICIEN_LABO = 'TECHNICIEN_LABO',
   PERSONNEL_HOPITAL = 'PERSONNEL_HOPITAL',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
+  PERSONNEL_CENTRE = 'PERSONNEL_CENTRE'
 }
 
 export interface UtilisateurResponseDto {

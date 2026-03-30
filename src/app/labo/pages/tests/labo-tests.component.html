@@ -1,0 +1,124 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Qualification Biologique</h1>
+      <p>Saisissez les résultats des tests (VIH, hépatites, syphilis) pour qualifier les poches.</p>
+    </div>
+  </div>
+
+  <div class="alert" [ngClass]="message.type" *ngIf="message.text">
+    {{ message.text }}
+  </div>
+
+  <div class="card table-card">
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Recherche des poches en attente de test...</p>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && poches.length === 0">
+      <div class="empty-icon bg-success">
+        <svg xmlns="http://www.w3.org/2001/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>Aucune poche à tester</h3>
+      <p>Tout le stock de sang est actuellement qualifié !</p>
+    </div>
+
+    <div class="table-container" *ngIf="!loading && poches.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID Poche</th>
+            <th>ID Don</th>
+            <th>Groupe Sanguin</th>
+            <th>Date Collecte</th>
+            <th>Expiration</th>
+            <th class="text-right">Test</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let poche of poches">
+            <td><span class="id-badge">#{{ poche.id }}</span></td>
+            <td><span class="text-muted">#{{ poche.donId }}</span></td>
+            <td>
+              <span class="blood-group-badge">{{ poche.groupeSanguin | slice:0:2 }}<span class="rh">{{ poche.groupeSanguin.includes('POSITIF') ? '+' : '-' }}</span></span>
+            </td>
+            <td>{{ poche.dateCollecte | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="date-expires">{{ poche.dateExpiration | date:'dd/MM/yyyy' }}</span>
+            </td>
+            <td class="text-right">
+              <button class="btn btn-primary btn-sm" (click)="openTestModal(poche)">
+                <svg xmlns="http://www.w3.org/2001/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Tester
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tests Biologiques -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Dépistage poche #{{ selectedPoche?.id }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-desc">
+        Cochez les cases si le dépistage est <strong>Positif</strong>.
+        Une poche testée positive à une pathologie sera immédiatement écartée.
+      </p>
+
+      <form class="test-form">
+        <label class="checkbox-container error-risk">
+          <input type="checkbox" [(ngModel)]="testForm.vih" name="vih">
+          <span class="checkmark"></span>
+          <div class="label-text">
+            <strong>VIH</strong>
+            <span>Test Virus Imumunodéficience Humaine</span>
+          </div>
+        </label>
+
+        <label class="checkbox-container error-risk">
+          <input type="checkbox" [(ngModel)]="testForm.hepatiteB" name="hepatiteB">
+          <span class="checkmark"></span>
+          <div class="label-text">
+            <strong>Hépatite B</strong>
+            <span>VHB (Ag HBs et Ac anti-HBc)</span>
+          </div>
+        </label>
+
+        <label class="checkbox-container error-risk">
+          <input type="checkbox" [(ngModel)]="testForm.hepatiteC" name="hepatiteC">
+          <span class="checkmark"></span>
+          <div class="label-text">
+            <strong>Hépatite C</strong>
+            <span>VHC (Ag / Acanti-VHC)</span>
+          </div>
+        </label>
+
+        <label class="checkbox-container error-risk">
+          <input type="checkbox" [(ngModel)]="testForm.syphilis" name="syphilis">
+          <span class="checkmark"></span>
+          <div class="label-text">
+            <strong>Syphilis</strong>
+            <span>Infection à Treponema pallidum</span>
+          </div>
+        </label>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="closeModal()" [disabled]="submitting">Annuler</button>
+      <button class="btn btn-primary" (click)="submitTest()" [disabled]="submitting">
+        <span *ngIf="!submitting">Enregistrer Résultats</span>
+        <span *ngIf="submitting" class="animate-spin">⧗</span>
+      </button>
+    </div>
+  </div>
+</div>

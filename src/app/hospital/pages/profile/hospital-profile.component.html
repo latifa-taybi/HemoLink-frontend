@@ -1,0 +1,91 @@
+<div class="profile-page">
+  <div class="header-section">
+    <h1>Profil de l'Établissement</h1>
+    <p>Consultez et mettez à jour les informations de contact de votre hôpital.</p>
+  </div>
+
+  <div class="profile-grid">
+    <div class="form-card card">
+      <div class="alert" *ngIf="message.text" [class]="'alert-' + message.type">
+        {{ message.text }}
+      </div>
+
+      <div class="loader" *ngIf="loading">Chargement des données...</div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <div class="form-group">
+          <label for="nom">Nom de l'Hôpital</label>
+          <input type="text" id="nom" formControlName="nom" [class.invalid]="profileForm.get('nom')?.touched && profileForm.get('nom')?.invalid">
+          <div class="error-msg" *ngIf="profileForm.get('nom')?.touched && profileForm.get('nom')?.invalid">
+            Le nom est requis.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adresse">Adresse</label>
+          <input type="text" id="adresse" formControlName="adresse" [class.invalid]="profileForm.get('adresse')?.touched && profileForm.get('adresse')?.invalid">
+          <div class="error-msg" *ngIf="profileForm.get('adresse')?.touched && profileForm.get('adresse')?.invalid">
+            L'adresse est requise.
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ville">Ville</label>
+            <input type="text" id="ville" formControlName="ville" [class.invalid]="profileForm.get('ville')?.touched && profileForm.get('ville')?.invalid">
+            <div class="error-msg" *ngIf="profileForm.get('ville')?.touched && profileForm.get('ville')?.invalid">
+              La ville est requise.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="tel" id="telephone" formControlName="telephone" [class.invalid]="profileForm.get('telephone')?.touched && profileForm.get('telephone')?.invalid">
+            <div class="error-msg" *ngIf="profileForm.get('telephone')?.touched && profileForm.get('telephone')?.invalid">
+              Veuillez saisir un numéro de téléphone valide.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="saving || profileForm.invalid">
+            <span *ngIf="!saving">Enregistrer les Modifications</span>
+            <span *ngIf="saving">Enregistrement...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Column -->
+    <div class="info-sidebar">
+      <div class="card id-card">
+        <div class="card-header">
+          <div class="hospital-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10"/><path d="M2 22h20"/><path d="M15 22V10h-6v12"/><path d="M12 2v4"/><path d="M10 4h4"/></svg>
+          </div>
+          <h3>Identité de l'Hôpital</h3>
+        </div>
+        <div class="info-list">
+          <div class="info-item">
+            <span class="info-label">ID Système</span>
+            <span class="info-value">#{{ hospitalId }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Type</span>
+            <span class="info-value">Centre Hospitalier</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Rôle d'Accès</span>
+            <span class="info-value">Personnel Hospitalier</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="help-box">
+        <h4>Besoin d'aide ?</h4>
+        <p>Si vous ne parvenez pas à modifier certaines informations, contactez l'administrateur HemoLink.</p>
+        <a href="mailto:admin@hemolink.com" class="support-mail">admin@hemolink.com</a>
+      </div>
+    </div>
+  </div>
+</div>

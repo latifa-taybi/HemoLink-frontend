@@ -37,7 +37,8 @@ export class Dashboard implements OnInit {
       [RoleUtilisateur.DONNEUR]: 'Donneur de sang',
       [RoleUtilisateur.TECHNICIEN_LABO]: 'Technicien Lab',
       [RoleUtilisateur.PERSONNEL_HOPITAL]: 'Personnel Hôpital',
-      [RoleUtilisateur.ADMIN]: 'Administrateur'
+      [RoleUtilisateur.ADMIN]: 'Administrateur',
+      [RoleUtilisateur.PERSONNEL_CENTRE]: 'Personnel Centre'
     };
     return labels[role] || role;
   }
@@ -65,6 +66,8 @@ export class Dashboard implements OnInit {
         return '/labo';
       case RoleUtilisateur.PERSONNEL_HOPITAL:
         return '/hopital';
+      case RoleUtilisateur.PERSONNEL_CENTRE:
+        return '/personnel';
       case RoleUtilisateur.DONNEUR:
       default:
         return '/donneur';

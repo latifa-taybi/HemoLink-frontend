@@ -1,0 +1,63 @@
+<div class="create-donation-page">
+  <div class="header-section">
+    <h1>Enregistrement de Don</h1>
+    <p>Remplissez les informations cliniques une fois le prélèvement terminé.</p>
+  </div>
+
+  <div class="form-card card">
+    <div class="alert" *ngIf="message.text" [class]="'alert-' + message.type">
+      {{ message.text }}
+    </div>
+
+    <form [formGroup]="donForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- ID Donneur -->
+        <div class="form-group">
+          <label for="donneurId">Identifiant du Donneur</label>
+          <input 
+            type="number" 
+            id="donneurId" 
+            formControlName="donneurId" 
+            placeholder="Ex: 105"
+            [class.invalid]="donForm.get('donneurId')?.touched && donForm.get('donneurId')?.invalid">
+          <div class="error-msg" *ngIf="donForm.get('donneurId')?.touched && donForm.get('donneurId')?.invalid">
+            Veuillez renseigner un ID donneur valide.
+          </div>
+        </div>
+
+        <!-- Volume -->
+        <div class="form-group">
+          <label for="volumeMl">Volume Prélevé (mL)</label>
+          <input 
+            type="number" 
+            id="volumeMl" 
+            formControlName="volumeMl" 
+            placeholder="Ex: 450"
+            [class.invalid]="donForm.get('volumeMl')?.touched && donForm.get('volumeMl')?.invalid">
+          <div class="error-msg" *ngIf="donForm.get('volumeMl')?.touched && donForm.get('volumeMl')?.invalid">
+            Le volume doit être compris entre 200 et 600 mL.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="loading || donForm.invalid">
+          <span *ngIf="!loading">Sauvegarder et Notifier le Labo</span>
+          <span *ngIf="loading">Enregistrement...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="info-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 11.5v-7A1.5 1.5 0 0 1 12.5 3 1.5 1.5 0 0 1 14 4.5v7"/><path d="M14 11.5v-4A1.5 1.5 0 0 1 15.5 6 1.5 1.5 0 0 1 17 7.5v4"/><path d="M17 11.5v-2A1.5 1.5 0 0 1 18.5 8 1.5 1.5 0 0 1 20 9.5v5.5a8.5 8.5 0 0 1-5.6 8 8.1 8.1 0 0 1-5.8-.2L4.2 21A1.2 1.2 0 0 1 3 19.8V15.5a8.5 8.5 0 0 1 8-8.5"/></svg>
+      </div>
+      <div class="info-content">
+        <h4>Étape suivante</h4>
+        <p>Après l'enregistrement, une notification est automatiquement envoyée à l'équipe laboratoire pour traiter la séparation des poches.</p>
+      </div>
+    </div>
+  </div>
+</div>

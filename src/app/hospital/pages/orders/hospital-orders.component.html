@@ -1,0 +1,112 @@
+<div class="orders-page">
+  <div class="header-section">
+    <div class="header-text">
+      <h1>Historique des Commandes</h1>
+      <p>Suivez l'état de préparation et de livraison de vos demandes de sang.</p>
+    </div>
+    <a routerLink="/hospital/create-order" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+      Nouvelle Demande
+    </a>
+  </div>
+
+  <!-- Messages -->
+  <div class="alert" *ngIf="message.text" [class]="'alert-' + message.type">
+    {{ message.text }}
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <button (click)="setFilter('ALL')" [class.active]="activeFilter === 'ALL'">Toutes</button>
+    <button (click)="setFilter('PENDING')" [class.active]="activeFilter === 'PENDING'">En Attente</button>
+    <button (click)="setFilter('SHIPPING')" [class.active]="activeFilter === 'SHIPPING'">En Livraison</button>
+    <button (click)="setFilter('DELIVERED')" [class.active]="activeFilter === 'DELIVERED'">Livrées</button>
+    <button (click)="setFilter('CANCELLED')" [class.active]="activeFilter === 'CANCELLED'">Annulées</button>
+  </div>
+
+  <div class="table-container card">
+    <div class="loader" *ngIf="loading">Chargement...</div>
+
+    <table class="orders-table" *ngIf="!loading && filteredOrders.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Groupe Sanguin</th>
+          <th>Quantité</th>
+          <th>Urgence</th>
+          <th>Date Commande</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of filteredOrders" [class.row-urgent]="order.urgence && order.statut === 'EN_ATTENTE'">
+          <td class="order-id">#{{ order.id }}</td>
+          <td>
+            <span class="blood-type">{{ order.groupeSanguin }}</span>
+          </td>
+          <td>{{ order.quantite }} poches</td>
+          <td>
+            <span class="urgent-badge" *ngIf="order.urgence">Urgente</span>
+            <span class="normal-badge" *ngIf="!order.urgence">Normale</span>
+          </td>
+          <td>{{ order.dateCommande | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <span class="status-badge" [class]="getStatusClass(order.statut)">
+              {{ order.statut }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <!-- EN_ATTENTE → Préparer -->
+            <button
+              *ngIf="canPreparer(order)"
+              class="btn-icon btn-prepare"
+              (click)="preparerOrder(order.id)"
+              [disabled]="processingId === order.id"
+              title="Mettre en préparation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+              Préparer
+            </button>
+            <!-- EN_PREPARATION → Expédier -->
+            <button
+              *ngIf="canExpedier(order)"
+              class="btn-icon btn-ship"
+              (click)="expedierOrder(order.id)"
+              [disabled]="processingId === order.id"
+              title="Expédier">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              Expédier
+            </button>
+            <!-- EN_LIVRAISON → Livrer -->
+            <button
+              *ngIf="canLivrer(order)"
+              class="btn-icon btn-deliver"
+              (click)="livrerOrder(order.id)"
+              [disabled]="processingId === order.id"
+              title="Marquer comme livré">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Livrer
+            </button>
+            <!-- Annuler (tout sauf LIVREE) -->
+            <button
+              *ngIf="canCancel(order)"
+              class="btn-icon btn-cancel"
+              (click)="cancelOrder(order.id)"
+              [disabled]="processingId === order.id"
+              title="Annuler la commande">
+              <svg xmlns="http://www.w3.org/2001/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 9-6 6"/><path d="m9 9 6 6"/><circle cx="12" cy="12" r="10"/></svg>
+              Annuler
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="!loading && filteredOrders.length === 0">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2001/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="2"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      </div>
+      <p>Aucune commande correspondant à votre filtre.</p>
+    </div>
+  </div>
+</div>

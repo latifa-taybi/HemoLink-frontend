@@ -1,0 +1,68 @@
+<div class="layout-container" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Desktop Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        <span class="logo-text" *ngIf="!isSidebarCollapsed">HemoLink</span>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <svg *ngIf="!isSidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <svg *ngIf="isSidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="section-title" *ngIf="!isSidebarCollapsed">Gestion Centrale</span>
+        
+        <a routerLink="/personnel/overview" routerLinkActive="active" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span *ngIf="!isSidebarCollapsed">Vue d'ensemble</span>
+        </a>
+
+        <a routerLink="/personnel/appointments" routerLinkActive="active" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+          <span *ngIf="!isSidebarCollapsed">Rendez-vous</span>
+        </a>
+
+        <a routerLink="/personnel/create-donation" routerLinkActive="active" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M12 3v9"/><path d="M12 7.5a4.5 4.5 0 0 1-4.5 4.5H3"/><path d="M12 7.5A4.5 4.5 0 0 0 16.5 12h4.5"/></svg>
+          <span *ngIf="!isSidebarCollapsed">Nouveau Don</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info" *ngIf="!isSidebarCollapsed">
+        <div class="avatar">{{ user?.prenom?.charAt(0) || 'U' }}</div>
+        <div class="details">
+          <span class="name">{{ user?.prenom }} {{ user?.nom }}</span>
+          <span class="role">Personnel (Centre #1)</span>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()" [title]="isSidebarCollapsed ? 'Se déconnecter' : ''">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span *ngIf="!isSidebarCollapsed">Se déconnecter</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-left">
+        <h2>Espace Personnel de Collecte</h2>
+      </div>
+      <div class="header-right">
+        <div class="status-badge">
+          Centre Ouvert
+        </div>
+      </div>
+    </header>
+    
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

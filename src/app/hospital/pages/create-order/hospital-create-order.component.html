@@ -1,0 +1,104 @@
+<div class="create-order-page">
+  <div class="header-section">
+    <a routerLink="/hospital/orders" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Retour aux commandes
+    </a>
+    <h1>Nouvelle Demande de Sang</h1>
+    <p>Remplissez le formulaire ci-dessous pour soumettre une demande au centre de transfusion.</p>
+  </div>
+
+  <div class="form-card card">
+    <div class="alert" *ngIf="message.text" [class]="'alert-' + message.type">
+      {{ message.text }}
+    </div>
+
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Centre de Collecte -->
+        <div class="form-group">
+          <label for="centreCollecteId">Centre de Collecte</label>
+          <div class="select-wrapper">
+            <select id="centreCollecteId" formControlName="centreCollecteId" [class.invalid]="orderForm.get('centreCollecteId')?.touched && orderForm.get('centreCollecteId')?.invalid" [disabled]="loadingCentres">
+              <option value="" disabled>{{ loadingCentres ? 'Chargement...' : 'Choisir un centre...' }}</option>
+              <option *ngFor="let centre of centres" [value]="centre.id">{{ centre.nom }} — {{ centre.ville }}</option>
+            </select>
+          </div>
+          <div class="error-msg" *ngIf="orderForm.get('centreCollecteId')?.touched && orderForm.get('centreCollecteId')?.invalid">
+            Veuillez sélectionner un centre de collecte.
+          </div>
+        </div>
+
+        <!-- Groupe Sanguin -->
+        <div class="form-group">
+          <label for="groupeSanguin">Groupe Sanguin Requis</label>
+          <div class="select-wrapper">
+            <select id="groupeSanguin" formControlName="groupeSanguin" [class.invalid]="orderForm.get('groupeSanguin')?.touched && orderForm.get('groupeSanguin')?.invalid">
+              <option value="" disabled>Choisir un groupe...</option>
+              <option *ngFor="let group of bloodGroups" [value]="group">{{ group }}</option>
+            </select>
+          </div>
+          <div class="error-msg" *ngIf="orderForm.get('groupeSanguin')?.touched && orderForm.get('groupeSanguin')?.invalid">
+            Veuillez sélectionner un groupe sanguin.
+          </div>
+        </div>
+
+        <!-- Quantité -->
+        <div class="form-group">
+          <label for="quantite">Quantité (Poches)</label>
+          <input 
+            type="number" 
+            id="quantite" 
+            formControlName="quantite" 
+            placeholder="Ex: 5"
+            [class.invalid]="orderForm.get('quantite')?.touched && orderForm.get('quantite')?.invalid">
+          <div class="error-msg" *ngIf="orderForm.get('quantite')?.touched && orderForm.get('quantite')?.invalid">
+            La quantité minimale est de 1 poche.
+          </div>
+        </div>
+      </div>
+
+      <!-- Urgence -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-container">
+          <input type="checkbox" formControlName="urgence">
+          <span class="checkmark"></span>
+          <div class="checkbox-label">
+            <span class="label-title">Demande Urgente</span>
+            <span class="label-desc">Cochez cette case uniquement pour les besoins critiques immédiats.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="loading || orderForm.invalid">
+          <span *ngIf="!loading">Confirmer la Demande</span>
+          <span *ngIf="loading">Enregistrement...</span>
+        </button>
+        <button type="button" routerLink="/hospital/orders" class="btn btn-ghost" [disabled]="loading">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Information Section -->
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="info-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      </div>
+      <div class="info-content">
+        <h4>Délai de traitement</h4>
+        <p>Les commandes classiques sont traitées sous 24h. Les commandes urgentes sont prioritaires.</p>
+      </div>
+    </div>
+    <div class="info-box warning">
+      <div class="info-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      </div>
+      <div class="info-content">
+        <h4>Stocks critiques</h4>
+        <p>Veuillez vérifier vos stocks internes avant de commander plus que nécessaire.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="overview-container">
+  <div class="header-section">
+    <h1>Tableau de Bord Laboratoire</h1>
+    <p class="subtitle">Vue d'ensemble du processus de séparation et qualification du sang.</p>
+  </div>
+
+  <div class="kpi-grid">
+    <!-- En attente de test -->
+    <div class="kpi-card card-warning">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-label">À Tester</h3>
+        <span class="kpi-value" *ngIf="!loading">{{ pochesSansTest }}</span>
+        <span class="kpi-skeleton" *ngIf="loading"></span>
+      </div>
+    </div>
+
+    <!-- Poches Disponibles -->
+    <div class="kpi-card card-success">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-label">Poches Disponibles</h3>
+        <span class="kpi-value" *ngIf="!loading">{{ pochesDisponibles }}</span>
+        <span class="kpi-skeleton" *ngIf="loading"></span>
+      </div>
+    </div>
+
+    <!-- Poches Ecartées -->
+    <div class="kpi-card card-danger">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div class="kpi-content">
+        <h3 class="kpi-label">Poches Écartées</h3>
+        <span class="kpi-value" *ngIf="!loading">{{ pochesEcartees }}</span>
+        <span class="kpi-skeleton" *ngIf="loading"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-grid">
+    <div class="action-card">
+      <div class="action-icon bg-blue">
+        <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7"/><path d="M14 14.5v3.5l3.5-3.5h-3.5z"/><path d="M19.5 22h-5l5-5v5z"/></svg>
+      </div>
+      <div class="action-content">
+        <h3>Séparation des dons</h3>
+        <p>Transformer les nouveaux dons récoltés en poches de sang non testées.</p>
+        <a routerLink="/labo/create-bags" class="btn btn-outline">Démarrer le processus</a>
+      </div>
+    </div>
+
+    <div class="action-card">
+      <div class="action-icon bg-red">
+        <svg xmlns="http://www.w3.org/2001/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3 3 0 1 0 6 0c0-1.66-3-6-3-6s-3 4.34-3 6z"/><path d="M12 22a8 8 0 1 0 0-16"/></svg>
+      </div>
+      <div class="action-content">
+        <h3>Qualification Biologique</h3>
+        <p>Entrez les résultats des dépistages et qualifiez les poches pour l'inventaire.</p>
+        <a routerLink="/labo/tests" class="btn btn-primary">Lancer les tests</a>
+      </div>
+    </div>
+  </div>
+</div>
