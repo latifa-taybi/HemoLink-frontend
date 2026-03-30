@@ -1,0 +1,24 @@
+<div class="max-w-4xl">
+  <h1 class="text-3xl font-bold mb-6">Search Blood Inventory</h1>
+
+  <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="flex gap-4">
+      <select [value]="selectedBloodType()" (change)="selectedBloodType.set($any($event.target).value)" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Select blood type...</option>
+        <option *ngFor="let bg of bloodGroups" [value]="bg">{{ bg }}</option>
+      </select>
+      <button (click)="search()" [disabled]="!selectedBloodType()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400">
+        Search
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let result of searchResults()" class="bg-white rounded-lg shadow p-6">
+      <p class="font-semibold text-lg">{{ result.bloodType }}</p>
+      <p class="text-3xl font-bold text-red-600 mt-2">{{ result.available }} units</p>
+      <p class="text-sm text-gray-600 mt-2">Available at {{ result.center }}</p>
+      <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Order Now</button>
+    </div>
+  </div>
+</div>

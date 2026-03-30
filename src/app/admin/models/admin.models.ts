@@ -56,6 +56,7 @@ export interface CreateUtilisateurDto {
   motDePasse: string;
   telephone?: string;
   role: RoleUtilisateur;
+  centreCollecteId?: number;
 }
 
 // ─── Collection Centre ────────────────────────────────────────────────────────

@@ -1,20 +1,22 @@
 /**
- * Hopital Service - Manages all hospital API operations
+ * Hopital Service - Hospital Management
  * Endpoints: /api/hopitals
+ * Manages hospital profiles, staff, orders, consumption analytics
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { Hopital, ApiResponse, PageableResponse } from '../models';
+import { Hopital, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HopitalService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/hopitals';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Hospitals

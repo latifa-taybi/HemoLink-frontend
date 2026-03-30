@@ -1,20 +1,28 @@
 /**
- * Utilisateur Service - Manages all user API operations
+ * Utilisateur Service - User/Employee Management
  * Endpoints: /api/utilisateurs
+ * Role-based access control: ADMIN, DONNEUR, HOPITAL, PERSONNEL_CENTRE, LABO_PERSONNEL
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { Utilisateur, RoleUtilisateur, ApiResponse, PageableResponse } from '../models';
+import {
+  Utilisateur,
+  UtilisateurDto,
+  RoleUtilisateur,
+  PageableResponse,
+  ApiResponse
+} from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilisateurService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/utilisateurs';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Users
@@ -22,18 +30,24 @@ export class UtilisateurService {
 
   /**
    * Get all users with pagination
+   * @param page - Page number (0-indexed)
+   * @param size - Number of records per page
+   * @param filters - Optional filters (role, actif, etc)
    */
   getAllUtilisateurs(
     page: number = 0,
     size: number = 20,
     filters?: any
   ): Observable<PageableResponse<Utilisateur>> {
-    let params = this.api.buildParams({
-      page,
-      size,
-      ...filters
-    });
+    let params = this.api.buildParams({ page, size, ...filters });
     return this.api.get<PageableResponse<Utilisateur>>(this.endpoint, params);
+  }
+
+  /**
+   * Get current user profile
+   */
+  getCurrentUser(): Observable<Utilisateur> {
+    return this.api.get<Utilisateur>(`${this.endpoint}/me`);
   }
 
   /**
@@ -54,7 +68,7 @@ export class UtilisateurService {
    * Search users by name
    */
   searchUtilisateurs(nom: string): Observable<Utilisateur[]> {
-    const params = this.api.buildParams({ nom });
+    let params = this.api.buildParams({ nom });
     return this.api.get<Utilisateur[]>(`${this.endpoint}/search`, params);
   }
 
@@ -66,52 +80,25 @@ export class UtilisateurService {
   }
 
   /**
-   * Get admins
-   */
-  getAdmins(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/role/${RoleUtilisateur.ADMIN}`);
-  }
-
-  /**
-   * Get donors
-   */
-  getDonneurs(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/role/${RoleUtilisateur.DONNEUR}`);
-  }
-
-  /**
-   * Get hospital staff
-   */
-  getHospitalStaff(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/role/${RoleUtilisateur.HOPITAL}`);
-  }
-
-  /**
-   * Get center collection personnel
-   */
-  getCentrePersonnel(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/role/${RoleUtilisateur.PERSONNEL_CENTRE}`);
-  }
-
-  /**
-   * Get lab personnel
-   */
-  getLabPersonnel(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/role/${RoleUtilisateur.LABO_PERSONNEL}`);
-  }
-
-  /**
-   * Get active users
+   * Get active users only
    */
   getActiveUtilisateurs(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/active`);
+    let params = this.api.buildParams({ actif: true });
+    return this.api.get<Utilisateur[]>(this.endpoint, params);
   }
 
   /**
-   * Get inactive users
+   * Get user login history
    */
-  getInactiveUtilisateurs(): Observable<Utilisateur[]> {
-    return this.api.get<Utilisateur[]>(`${this.endpoint}/inactive`);
+  getUserLoginHistory(userId: number): Observable<any[]> {
+    return this.api.get<any[]>(`${this.endpoint}/${userId}/login-history`);
+  }
+
+  /**
+   * Get user audit logs
+   */
+  getUserAuditLogs(userId: number): Observable<any[]> {
+    return this.api.get<any[]>(`${this.endpoint}/${userId}/audit-logs`);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -119,75 +106,118 @@ export class UtilisateurService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Create new user (admin only)
+   * Create new user
    */
-  createUtilisateur(utilisateur: Partial<Utilisateur>): Observable<Utilisateur> {
-    return this.api.post<Utilisateur>(this.endpoint, utilisateur);
+  createUtilisateur(user: UtilisateurDto): Observable<Utilisateur> {
+    return this.api.post<Utilisateur>(this.endpoint, user);
+  }
+
+  /**
+   * Create user with role assignment
+   */
+  createUtilisateurWithRole(user: UtilisateurDto, role: RoleUtilisateur): Observable<Utilisateur> {
+    return this.api.post<Utilisateur>(`${this.endpoint}?role=${role}`, user);
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // PUT - Update User
+  // PUT/PATCH - Update User
   // ═══════════════════════════════════════════════════════════════
 
   /**
    * Update user information
    */
-  updateUtilisateur(id: number, utilisateur: Partial<Utilisateur>): Observable<Utilisateur> {
-    return this.api.put<Utilisateur>(`${this.endpoint}/${id}`, utilisateur);
+  updateUtilisateur(id: number, user: Partial<UtilisateurDto>): Observable<Utilisateur> {
+    return this.api.put<Utilisateur>(`${this.endpoint}/${id}`, user);
   }
 
   /**
-   * Update user role (admin only)
+   * Update user role
    */
   updateUtilisateurRole(id: number, role: RoleUtilisateur): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/role`, { role });
-  }
-
-  /**
-   * Update user status (active/inactive)
-   */
-  updateUtilisateurStatus(id: number, actif: boolean): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/status`, { actif });
+    return this.api.patch<Utilisateur>(
+      `${this.endpoint}/${id}/role`,
+      { role }
+    );
   }
 
   /**
    * Update user password
    */
-  updatePassword(id: number, oldPassword: string, newPassword: string): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/password`, {
-      oldPassword,
-      newPassword
-    });
+  updatePassword(userId: number, oldPassword: string, newPassword: string): Observable<ApiResponse<any>> {
+    return this.api.patch<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/password`,
+      { oldPassword, newPassword }
+    );
   }
 
   /**
-   * Reset user password (admin only)
+   * Reset user password (admin action)
    */
-  resetPassword(id: number, tempPassword: string): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/reset-password`, {
-      tempPassword
-    });
+  resetPassword(userId: number): Observable<ApiResponse<any>> {
+    return this.api.post<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/reset-password`,
+      {}
+    );
   }
 
   /**
    * Enable 2FA for user
    */
-  enable2FA(id: number): Observable<any> {
-    return this.api.patch<any>(`${this.endpoint}/${id}/2fa-enable`, {});
+  enable2FA(userId: number): Observable<ApiResponse<any>> {
+    return this.api.post<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/2fa/enable`,
+      {}
+    );
   }
 
   /**
    * Disable 2FA for user
    */
-  disable2FA(id: number): Observable<any> {
-    return this.api.patch<any>(`${this.endpoint}/${id}/2fa-disable`, {});
+  disable2FA(userId: number): Observable<ApiResponse<any>> {
+    return this.api.post<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/2fa/disable`,
+      {}
+    );
   }
 
   /**
-   * Update user profile
+   * Activate user account
    */
-  updateProfile(id: number, profile: any): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/profile`, profile);
+  activateUser(userId: number): Observable<Utilisateur> {
+    return this.api.patch<Utilisateur>(
+      `${this.endpoint}/${userId}/activate`,
+      {}
+    );
+  }
+
+  /**
+   * Deactivate user account
+   */
+  deactivateUser(userId: number): Observable<Utilisateur> {
+    return this.api.patch<Utilisateur>(
+      `${this.endpoint}/${userId}/deactivate`,
+      {}
+    );
+  }
+
+  /**
+   * Lock user account
+   */
+  lockUserAccount(userId: number): Observable<ApiResponse<any>> {
+    return this.api.post<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/lock`,
+      {}
+    );
+  }
+
+  /**
+   * Force logout user
+   */
+  forceLogout(userId: number): Observable<ApiResponse<any>> {
+    return this.api.post<ApiResponse<any>>(
+      `${this.endpoint}/${userId}/force-logout`,
+      {}
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -195,49 +225,10 @@ export class UtilisateurService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Delete (deactivate) user - usually logical delete
+   * Delete user
    */
   deleteUtilisateur(id: number): Observable<void> {
     return this.api.delete<void>(`${this.endpoint}/${id}`);
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // ADMIN OPERATIONS
-  // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Get user audit log
-   */
-  getUserAuditLog(id: number): Observable<any[]> {
-    return this.api.get<any[]>(`${this.endpoint}/${id}/audit-log`);
-  }
-
-  /**
-   * Get user login history
-   */
-  getLoginHistory(id: number): Observable<any[]> {
-    return this.api.get<any[]>(`${this.endpoint}/${id}/login-history`);
-  }
-
-  /**
-   * Force logout user
-   */
-  forceLogout(id: number): Observable<void> {
-    return this.api.post<void>(`${this.endpoint}/${id}/force-logout`, {});
-  }
-
-  /**
-   * Lock user account
-   */
-  lockUser(id: number): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/lock`, {});
-  }
-
-  /**
-   * Unlock user account
-   */
-  unlockUser(id: number): Observable<Utilisateur> {
-    return this.api.patch<Utilisateur>(`${this.endpoint}/${id}/unlock`, {});
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -245,23 +236,23 @@ export class UtilisateurService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Get user statistics
-   */
-  getUtilisateurStats(): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/stats`);
-  }
-
-  /**
-   * Get users by role statistics
+   * Get users statistics by role
    */
   getStatsByRole(): Observable<any> {
     return this.api.get<any>(`${this.endpoint}/stats/by-role`);
   }
 
   /**
-   * Get active vs inactive users count
+   * Get users statistics
    */
-  getStatusStats(): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/stats/status`);
+  getUsersStats(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats`);
+  }
+
+  /**
+   * Get users activity report
+   */
+  getActivityReport(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/reports/activity`);
   }
 }

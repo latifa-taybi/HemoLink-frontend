@@ -1,21 +1,22 @@
 /**
- * Donneur Service - Manages all Donneur (Donor) API operations
+ * Donneur Service - Donor Management
  * Endpoints: /api/donneurs
+ * Handles donor profiles, eligibility, donations tracking
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { Donneur, ApiResponse, PageableResponse } from '../models';
+import { Donneur, GroupeSanguin, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DonneurService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/donneurs';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Donors
@@ -23,17 +24,16 @@ export class DonneurService {
 
   /**
    * Get all donors with pagination and filtering
+   * @param page - Page number (0-indexed)
+   * @param size - Number of records per page
+   * @param filters - Optional filters (groupeSanguin, dateNaissance, etc)
    */
   getAllDonneurs(
     page: number = 0,
     size: number = 20,
     filters?: any
   ): Observable<PageableResponse<Donneur>> {
-    let params = this.api.buildParams({
-      page,
-      size,
-      ...filters
-    });
+    let params = this.api.buildParams({ page, size, ...filters });
     return this.api.get<PageableResponse<Donneur>>(this.endpoint, params);
   }
 
@@ -45,32 +45,41 @@ export class DonneurService {
   }
 
   /**
-   * Get donor by email
+   * Get donor by user ID
    */
-  getDonneurByEmail(email: string): Observable<Donneur> {
-    return this.api.get<Donneur>(`${this.endpoint}/email/${email}`);
+  getDonneurByUtilisateurId(utilisateurId: number): Observable<Donneur> {
+    return this.api.get<Donneur>(`${this.endpoint}/utilisateur/${utilisateurId}`);
   }
 
   /**
-   * Search donors by name
+   * Search donors by name or email
    */
-  searchDonneurs(nom: string): Observable<Donneur[]> {
-    const params = this.api.buildParams({ nom });
+  searchDonneurs(query: string): Observable<Donneur[]> {
+    let params = this.api.buildParams({ query });
     return this.api.get<Donneur[]>(`${this.endpoint}/search`, params);
   }
 
   /**
    * Get donors by blood group
+   * @param groupeSanguin - Blood type (O_PLUS, A_MINUS, etc)
    */
-  getDonneursByBloodGroup(groupeSanguin: string): Observable<Donneur[]> {
+  getDonneursByBloodGroup(groupeSanguin: GroupeSanguin): Observable<Donneur[]> {
     return this.api.get<Donneur[]>(`${this.endpoint}/blood-group/${groupeSanguin}`);
   }
 
   /**
-   * Get eligible donors (donation statistics, health status, etc.)
+   * Get eligible donors for donation
+   * Checks donation frequency, weight, health status
    */
   getEligibleDonneurs(): Observable<Donneur[]> {
     return this.api.get<Donneur[]>(`${this.endpoint}/eligible`);
+  }
+
+  /**
+   * Get eligible donors by blood group
+   */
+  getEligibleDonneursByBloodGroup(groupeSanguin: GroupeSanguin): Observable<Donneur[]> {
+    return this.api.get<Donneur[]>(`${this.endpoint}/eligible/blood-group/${groupeSanguin}`);
   }
 
   /**
@@ -81,10 +90,24 @@ export class DonneurService {
   }
 
   /**
-   * Get donor appointments
+   * Get donor appointments/rendez-vous
    */
   getDonneurAppointments(donneurId: number): Observable<any[]> {
     return this.api.get<any[]>(`${this.endpoint}/${donneurId}/appointments`);
+  }
+
+  /**
+   * Get donor statistics
+   */
+  getDonneurStats(donneurId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${donneurId}/stats`);
+  }
+
+  /**
+   * Check donor eligibility for donation
+   */
+  checkEligibility(donneurId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${donneurId}/check-eligibility`);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -99,7 +122,7 @@ export class DonneurService {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // PUT - Update Donor
+  // PUT/PATCH - Update Donor
   // ═══════════════════════════════════════════════════════════════
 
   /**
@@ -112,12 +135,35 @@ export class DonneurService {
   /**
    * Update donor availability status
    */
-  updateDonneurAvailability(id: number, disponiblite: boolean): Observable<Donneur> {
-    return this.api.patch<Donneur>(`${this.endpoint}/${id}/availability`, { disponiblite });
+  updateDonneurAvailability(id: number, disponible: boolean): Observable<Donneur> {
+    return this.api.patch<Donneur>(
+      `${this.endpoint}/${id}/availability`,
+      { disponible }
+    );
+  }
+
+  /**
+   * Update last donation date
+   */
+  updateLastDonationDate(donneurId: number, date: Date): Observable<Donneur> {
+    return this.api.patch<Donneur>(
+      `${this.endpoint}/${donneurId}/last-donation`,
+      { dateDernierDon: date }
+    );
+  }
+
+  /**
+   * Update annual donation count
+   */
+  updateAnnualDonationCount(donneurId: number, count: number): Observable<Donneur> {
+    return this.api.patch<Donneur>(
+      `${this.endpoint}/${donneurId}/annual-count`,
+      { nombreDonsAnnuel: count }
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // DELETE - Remove Donor (usually logical delete)
+  // DELETE - Remove Donor
   // ═══════════════════════════════════════════════════════════════
 
   /**
@@ -132,16 +178,23 @@ export class DonneurService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Get donor statistics
+   * Get donor statistics by blood group
    */
-  getDonneurStats(): Observable<any> {
+  getStatsByBloodGroup(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/blood-groups`);
+  }
+
+  /**
+   * Get all donors statistics
+   */
+  getDonneursStats(): Observable<any> {
     return this.api.get<any>(`${this.endpoint}/stats`);
   }
 
   /**
-   * Get statistics by blood group
+   * Get donation frequency report
    */
-  getStatsByBloodGroup(): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/stats/blood-groups`);
+  getDonationFrequencyReport(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/reports/frequency`);
   }
 }

@@ -1,23 +1,25 @@
 /**
- * Centre Collecte Service - Manages all collection center API operations
+ * Centre Collecte Service - Collection Center Management
  * Endpoints: /api/centres-collecte
+ * Manages collection centers, schedules, and location-based queries
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { CentreCollecte, ApiResponse, PageableResponse } from '../models';
+import { CentreCollecte, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CentreCollecteService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/centres-collecte';
 
-  constructor(private api: ApiService) {}
-
   // ═══════════════════════════════════════════════════════════════
-  // GET - Retrieve Collection Centers
+  // GET - Retrieve Centers
   // ═══════════════════════════════════════════════════════════════
 
   /**
@@ -28,61 +30,69 @@ export class CentreCollecteService {
     size: number = 20,
     filters?: any
   ): Observable<PageableResponse<CentreCollecte>> {
-    let params = this.api.buildParams({
-      page,
-      size,
-      ...filters
-    });
+    let params = this.api.buildParams({ page, size, ...filters });
     return this.api.get<PageableResponse<CentreCollecte>>(this.endpoint, params);
   }
 
   /**
-   * Get collection center by ID
+   * Get center by ID
    */
   getCentreById(id: number): Observable<CentreCollecte> {
     return this.api.get<CentreCollecte>(`${this.endpoint}/${id}`);
   }
 
   /**
+   * Find nearby collection centers by coordinates
+   * @param latitude - Current latitude
+   * @param longitude - Current longitude
+   * @param radiusKm - Search radius in kilometers
+   */
+  getNearByCentres(latitude: number, longitude: number, radiusKm: number = 20): Observable<CentreCollecte[]> {
+    let params = this.api.buildParams({ latitude, longitude, radius: radiusKm });
+    return this.api.get<CentreCollecte[]>(`${this.endpoint}/nearby`, params);
+  }
+
+  /**
    * Get centers by city
    */
-  getCentresByCity(ville: string): Observable<CentreCollecte[]> {
-    const params = this.api.buildParams({ ville });
-    return this.api.get<CentreCollecte[]>(`${this.endpoint}/city`, params);
+  getCentresByCity(city: string): Observable<CentreCollecte[]> {
+    return this.api.get<CentreCollecte[]>(`${this.endpoint}/city/${city}`);
   }
 
   /**
    * Search centers by name
    */
   searchCentres(nom: string): Observable<CentreCollecte[]> {
-    const params = this.api.buildParams({ nom });
+    let params = this.api.buildParams({ nom });
     return this.api.get<CentreCollecte[]>(`${this.endpoint}/search`, params);
   }
 
   /**
-   * Get nearby collection centers (geolocation based)
+   * Get center operating schedule
    */
-  getNearByCentres(latitude: number, longitude: number, radiusKm: number = 5): Observable<CentreCollecte[]> {
-    const params = this.api.buildParams({
-      latitude,
-      longitude,
-      radiusKm
-    });
-    return this.api.get<CentreCollecte[]>(`${this.endpoint}/nearby`, params);
+  getCentreSchedule(centreId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${centreId}/schedule`);
   }
 
   /**
-   * Get collection center details with staff and schedule
+   * Get center blood inventory
    */
-  getCentreDetails(id: number): Observable<CentreCollecte> {
-    return this.api.get<CentreCollecte>(`${this.endpoint}/${id}/details`);
+  getCentreStock(centreId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${centreId}/stock`);
   }
 
   /**
-   * Get center appointments
+   * Get center performance metrics
    */
-  getCentreAppointments(centreId: number): Observable<any[]> {
-    return this.api.get<any[]>(`${this.endpoint}/${centreId}/appointments`);
+  getCentrePerformance(centreId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${centreId}/performance`);
+  }
+
+  /**
+   * Get center attendance report
+   */
+  getAttendanceReport(centreId: number): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/${centreId}/attendance`);
   }
 
   /**
@@ -93,28 +103,15 @@ export class CentreCollecteService {
   }
 
   /**
-   * Get center schedule/hours
+   * Get available appointment slots for center
    */
-  getCentreSchedule(centreId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/${centreId}/schedule`);
-  }
-
-  /**
-   * Get all active centers
-   */
-  getActiveCentres(): Observable<CentreCollecte[]> {
-    return this.api.get<CentreCollecte[]>(`${this.endpoint}/active`);
-  }
-
-  /**
-   * Get center blood stock
-   */
-  getCentreStock(centreId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/${centreId}/stock`);
+  getAvailableSlots(centreId: number, date?: Date): Observable<any[]> {
+    let params = this.api.buildParams(date ? { date } : {});
+    return this.api.get<any[]>(`${this.endpoint}/${centreId}/available-slots`, params);
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // POST - Create Collection Center
+  // POST - Create Center
   // ═══════════════════════════════════════════════════════════════
 
   /**
@@ -127,59 +124,70 @@ export class CentreCollecteService {
   /**
    * Add staff to center
    */
-  addStaffToCentre(centreId: number, staffId: number): Observable<CentreCollecte> {
-    return this.api.post<CentreCollecte>(`${this.endpoint}/${centreId}/staff`, {
-      staffId
-    });
+  addStaffToCentre(centreId: number, staffId: number): Observable<any> {
+    return this.api.post<any>(
+      `${this.endpoint}/${centreId}/staff`,
+      { staffId }
+    );
+  }
+
+  /**
+   * Add schedule hours to center
+   */
+  addScheduleToCentre(centreId: number, schedule: any): Observable<any> {
+    return this.api.post<any>(
+      `${this.endpoint}/${centreId}/schedule`,
+      schedule
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // PUT - Update Collection Center
+  // PUT/PATCH - Update Center
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Update collection center information
+   * Update center information
    */
   updateCentre(id: number, centre: Partial<CentreCollecte>): Observable<CentreCollecte> {
     return this.api.put<CentreCollecte>(`${this.endpoint}/${id}`, centre);
   }
 
   /**
-   * Update center contact information
+   * Update center location
    */
-  updateCentreContact(
-    id: number,
-    telephone: string,
-    email: string,
-    adresse: string
-  ): Observable<CentreCollecte> {
-    return this.api.patch<CentreCollecte>(`${this.endpoint}/${id}/contact`, {
-      telephone,
-      email,
-      adresse
-    });
+  updateLocation(centreId: number, latitude: number, longitude: number): Observable<CentreCollecte> {
+    return this.api.patch<CentreCollecte>(
+      `${this.endpoint}/${centreId}/location`,
+      { latitude, longitude }
+    );
   }
 
   /**
-   * Update center status
+   * Update center contact information
    */
-  updateCentreStatus(id: number, actif: boolean): Observable<CentreCollecte> {
-    return this.api.patch<CentreCollecte>(`${this.endpoint}/${id}/status`, { actif });
+  updateContact(centreId: number, telephone: string): Observable<CentreCollecte> {
+    return this.api.patch<CentreCollecte>(
+      `${this.endpoint}/${centreId}/contact`,
+      { telephone }
+    );
   }
 
   /**
    * Update center schedule
    */
-  updateCentreSchedule(id: number, schedule: any): Observable<CentreCollecte> {
-    return this.api.patch<CentreCollecte>(`${this.endpoint}/${id}/schedule`, schedule);
+  updateSchedule(centreId: number, schedule: any): Observable<any> {
+    return this.api.patch<any>(
+      `${this.endpoint}/${centreId}/schedule`,
+      schedule
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // DELETE - Remove Collection Center
+  // DELETE - Remove from Center
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Delete collection center
+   * Delete center
    */
   deleteCentre(id: number): Observable<void> {
     return this.api.delete<void>(`${this.endpoint}/${id}`);
@@ -188,8 +196,8 @@ export class CentreCollecteService {
   /**
    * Remove staff from center
    */
-  removeStaffFromCentre(centreId: number, staffId: number): Observable<CentreCollecte> {
-    return this.api.delete<CentreCollecte>(`${this.endpoint}/${centreId}/staff/${staffId}`);
+  removeStaffFromCentre(centreId: number, staffId: number): Observable<void> {
+    return this.api.delete<void>(`${this.endpoint}/${centreId}/staff/${staffId}`);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -199,36 +207,14 @@ export class CentreCollecteService {
   /**
    * Get all centers statistics
    */
-  getCentreStats(): Observable<any> {
+  getCentresStats(): Observable<any> {
     return this.api.get<any>(`${this.endpoint}/stats`);
   }
 
   /**
-   * Get specific center statistics
+   * Get centers by city statistics
    */
-  getSpecificCentreStats(id: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/${id}/stats`);
-  }
-
-  /**
-   * Get center donation summary
-   */
-  getDonationSummary(centreId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/${centreId}/donation-summary`);
-  }
-
-  /**
-   * Get center attendance report
-   */
-  getAttendanceReport(centreId: number, startDate: string, endDate: string): Observable<any> {
-    const params = this.api.buildParams({ startDate, endDate });
-    return this.api.get<any>(`${this.endpoint}/${centreId}/attendance-report`, params);
-  }
-
-  /**
-   * Get center performance metrics
-   */
-  getPerformanceMetrics(centreId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/${centreId}/performance-metrics`);
+  getStatsByCities(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/by-city`);
   }
 }

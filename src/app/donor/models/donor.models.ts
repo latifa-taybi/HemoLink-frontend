@@ -2,6 +2,7 @@ import { GroupeSanguin } from '../../admin/models/admin.models';
 
 export interface Donneur {
   id: number;
+  utilisateurId: number;
   nom: string;
   prenom: string;
   email: string;
@@ -9,7 +10,8 @@ export interface Donneur {
   groupeSanguin: GroupeSanguin;
   dateDernierDon?: string;
   nombreDonsAnnuel: number;
-  utilisateurId: number;
+  actif?: boolean;
+  creeLe?: string;
 }
 
 export interface Eligibilite {
@@ -28,22 +30,21 @@ export interface Don {
 }
 
 export enum StatutRendezVous {
-  PREVU = 'PREVU',
+  PLANIFIE = 'PLANIFIE',
   ANNULE = 'ANNULE',
-  PRESENTE = 'PRESENTE',
-  ABSENT = 'ABSENT'
+  TERMINE = 'TERMINE'
 }
 
 export interface RendezVous {
   id: number;
-  dateHeure: string;
+  dateRendezVous: string;
   centreId: number;
   centreNom: string;
   statut: StatutRendezVous;
 }
 
 export interface CreateRendezVousDto {
-  dateHeure: string;
+  dateRendezVous: string;
   centreId: number;
   donneurId: number;
 }

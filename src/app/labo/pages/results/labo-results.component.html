@@ -1,0 +1,38 @@
+<div class="space-y-6">
+  <h1 class="text-3xl font-bold">Test Results</h1>
+
+  <div class="space-y-4">
+    <div *ngFor="let result of results()" class="bg-white rounded-lg shadow p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="font-semibold text-lg">Bag #{{ result.bagId }}</h3>
+          <p class="text-sm text-gray-600">{{ result.testDate }}</p>
+        </div>
+        <button (click)="downloadReport(result.id)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+          Download Report
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y">
+        <div>
+          <p class="text-xs text-gray-600">HIV</p>
+          <p class="font-semibold" [class]="result.hiv === 'negative' ? 'text-green-600' : 'text-red-600'">{{ result.hiv }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-600">Hepatitis B</p>
+          <p class="font-semibold" [class]="result.hepatitisB === 'negative' ? 'text-green-600' : 'text-red-600'">{{ result.hepatitisB }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-600">Hepatitis C</p>
+          <p class="font-semibold" [class]="result.hepatitisC === 'negative' ? 'text-green-600' : 'text-red-600'">{{ result.hepatitisC }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-600">Syphilis</p>
+          <p class="font-semibold" [class]="result.syphilis === 'negative' ? 'text-green-600' : 'text-red-600'">{{ result.syphilis }}</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-4">{{ result.notes }}</p>
+    </div>
+  </div>
+</div>

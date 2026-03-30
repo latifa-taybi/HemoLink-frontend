@@ -1,20 +1,23 @@
 /**
- * Notification Service - Manages all notification API operations
+ * Notification Service - System Notifications Management
  * Endpoints: /api/notifications
+ * Manages user notifications, preferences, delivery channels
+ * Supports: Appointment reminders, order updates, system alerts
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { Notification, ApiResponse, PageableResponse } from '../models';
+import { Notification, RoleUtilisateur, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/notifications';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Notifications

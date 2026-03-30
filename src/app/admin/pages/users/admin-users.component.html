@@ -142,6 +142,21 @@
               </select>
             </div>
           </div>
+          
+          @if (form.get('role')?.value === 'PERSONNEL_CENTRE') {
+            <div class="form-group" style="margin-top: 1rem;">
+              <label>Centre de collecte affilié *</label>
+              <select formControlName="centreCollecteId" class="form-input">
+                <option [ngValue]="null" disabled>Sélectionnez un centre</option>
+                @for (center of centers; track center.id) {
+                  <option [value]="center.id">{{ center.nom }} ({{ center.ville }})</option>
+                }
+              </select>
+              @if (getField('centreCollecteId')?.invalid && getField('centreCollecteId')?.touched) {
+                <span class="field-error">Un centre doit être assigné</span>
+              }
+            </div>
+          }
           @if (error) { <div class="alert-error">{{ error }}</div> }
           <div class="modal-actions">
             <button type="button" class="btn-secondary" (click)="closeModal()">Annuler</button>

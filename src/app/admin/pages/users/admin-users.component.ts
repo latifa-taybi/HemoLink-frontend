@@ -1,8 +1,14 @@
+/**
+ * ADMIN MODULE - User Management Page
+ * File: src/app/admin/pages/users/admin-users.component.ts
+ */
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminUsersService } from '../../services/admin-users.service';
-import { Utilisateur, RoleUtilisateur, CreateUtilisateurDto } from '../../models/admin.models';
+import { AdminCentersService } from '../../services/admin-centers.service';
+import { Utilisateur, RoleUtilisateur, CreateUtilisateurDto, CentreCollecte } from '../../models/admin.models';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -15,6 +21,7 @@ import { catchError, of } from 'rxjs';
 export class AdminUsersComponent implements OnInit {
   users: Utilisateur[] = [];
   filtered: Utilisateur[] = [];
+  centers: CentreCollecte[] = [];
   loading = true;
   error = '';
   success = '';
@@ -46,7 +53,7 @@ export class AdminUsersComponent implements OnInit {
     { key: RoleUtilisateur.PERSONNEL_CENTRE, label: 'Centres' },
   ];
 
-  constructor(private usersService: AdminUsersService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private usersService: AdminUsersService, private centersService: AdminCentersService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
     this.form = this.fb.group({
       prenom: ['', [Validators.required, Validators.minLength(2)]],
       nom: ['', [Validators.required, Validators.minLength(2)]],
@@ -54,6 +61,19 @@ export class AdminUsersComponent implements OnInit {
       motDePasse: ['', [Validators.required, Validators.minLength(6)]],
       telephone: [''],
       role: [RoleUtilisateur.DONNEUR, Validators.required],
+      centreCollecteId: [null],
+    });
+
+    // Update validators dynamically when role changes
+    this.form.get('role')?.valueChanges.subscribe(role => {
+      const centreControl = this.form.get('centreCollecteId');
+      if (role === RoleUtilisateur.PERSONNEL_CENTRE) {
+        centreControl?.setValidators([Validators.required]);
+      } else {
+        centreControl?.clearValidators();
+        centreControl?.setValue(null);
+      }
+      centreControl?.updateValueAndValidity();
     });
   }
 
@@ -61,6 +81,9 @@ export class AdminUsersComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.centersService.getAll().pipe(catchError(() => of([]))).subscribe(centers => {
+      this.centers = centers;
+    });
     this.usersService.getAll().pipe(catchError(() => of([]))).subscribe(users => {
       this.users = users;
       this.applyFilter();
@@ -75,7 +98,7 @@ export class AdminUsersComponent implements OnInit {
   }
 
   openAddModal(): void {
-    this.form.reset({ role: RoleUtilisateur.DONNEUR });
+    this.form.reset({ role: RoleUtilisateur.DONNEUR, centreCollecteId: null });
     this.showModal = true;
     this.error = '';
     this.success = '';

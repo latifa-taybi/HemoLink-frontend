@@ -51,9 +51,12 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', loadComponent: () => import('./donor/pages/overview/donor-overview.component').then(m => m.DonorOverviewComponent) },
+      { path: 'profile', loadComponent: () => import('./donor/pages/profile/donor-profile.component').then(m => m.DonorProfileComponent) },
+      { path: 'eligibility', loadComponent: () => import('./donor/pages/eligibility/donor-eligibility.component').then(m => m.DonorEligibilityComponent) },
       { path: 'history', loadComponent: () => import('./donor/pages/history/donor-history.component').then(m => m.DonorHistoryComponent) },
-      { path: 'find-centers', loadComponent: () => import('./donor/pages/map/donor-map.component').then(m => m.DonorMapComponent) },
+      { path: 'centers', loadComponent: () => import('./donor/pages/centers/donor-centers.component').then(m => m.DonorCentersComponent) },
       { path: 'appointments', loadComponent: () => import('./donor/pages/appointments/donor-appointments.component').then(m => m.DonorAppointmentsComponent) },
+      { path: 'notifications', loadComponent: () => import('./donor/pages/notifications/donor-notifications.component').then(m => m.DonorNotificationsComponent) },
     ],
   },
   {

@@ -1,0 +1,1049 @@
+﻿
+> hemolink-frontend@0.0.0 build
+> ng build
+
+[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+Application bundle generation failed. [21.874 seconds] - 2026-03-30T18:51:21.780Z
+
+node.exe : [1m[33m[33mÔû▓ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: 
+RouterLink is not used within the template of AdminUsersComponent[0m 
+[1m[35m[plugin angular-compiler][0m
+Au caractère C:\Program Files\nodejs\npm.ps1:29 : 3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[33m[33mÔ...r-compiler][0m 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+    src/app/admin/pages/users/admin-users.component.ts:29:39:
+[37m      29 Ôöé   imports: [CommonModule, FormsModule, [32mRouterLink[37m],
+         ÔòÁ                                        [32m~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find 
+module '../../guards/auth.guard' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/admin-routing.module.ts:2:26:
+[37m      2 Ôöé import { authGuard } from [32m'../../guards/auth.guard'[37m;
+        ÔòÁ                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../models' or its corresponding type declarations.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/admin-routing.module.ts:3:32:
+[37m      3 Ôöé import { RoleUtilisateur } from [32m'../../models'[37m;
+        ÔòÁ                                 [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'openAddModal' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:8:41:
+[37m      8 Ôöé     <button class="btn-primary" 
+(click)="[32mopenAddModal[37m()">
+        ÔòÁ                                          [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'success' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:15:7:
+[37m      15 Ôöé   @if ([32msuccess[37m) {
+         ÔòÁ        [32m~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'success' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:16:34:
+[37m      16 Ôöé     <div class="alert-success">{{ [32msuccess[37m }}</div>
+         ÔòÁ                                   [32m~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'filterTabs' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:21:17:
+[37m      21 Ôöé     @for (tab of [32mfilterTabs[37m; track tab.key) {
+         ÔòÁ                  [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'activeRoleFilter' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:24:28:
+[37m      24 Ôöé         [class.tab-active]="[32mactiveRoleFilter[37m === 
+tab.key"
+         ÔòÁ                             [32m~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'applyFilter' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:25:17:
+[37m      25 Ôöé         (click)="[32mapplyFilter[37m(tab.key)"
+         ÔòÁ                  [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'loading' does 
+not exist on type 'AdminUsersComponent'. Did you mean 'isLoading'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:32:9:
+[37m      32 Ôöé     @if ([32mloading[37m) {
+         ÔòÁ          [32m~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'filtered' 
+does not exist on type 'AdminUsersComponent'. Did you mean 'filter'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:34:16:
+[37m      34 Ôöé     } @else if ([32mfiltered[37m.length === 0) {
+         ÔòÁ                 [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'filtered' 
+does not exist on type 'AdminUsersComponent'. Did you mean 'filter'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:52:24:
+[37m      52 Ôöé           @for (user of [32mfiltered[37m; track user.id) {
+         ÔòÁ                         [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'roleLabels' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:62:67:
+[37m      62 Ôöé ...adge role-{{ user.role }}">{{ 
+[32mroleLabels[37m[user.role] }}</span></td>
+         ÔòÁ                                  [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'formatDate' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:68:21:
+[37m      68 Ôöé               <td>{{ [32mformatDate[37m(user.creeLe) 
+}}</td>
+         ÔòÁ                      [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'toggleStatut' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:75:29:
+[37m      75 Ôöé                     (click)="[32mtoggleStatut[37m(user)"
+         ÔòÁ                              [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'confirmDelete' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:80:54:
+[37m      80 Ôöé ...lass="btn-delete" (click)="[32mconfirmDelete[37m(user)" 
+title="Supprimer">
+         ÔòÁ                               [32m~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'showModal' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:93:7:
+[37m      93 Ôöé   @if ([32mshowModal[37m) {
+         ÔòÁ        [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'closeModal' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:94:40:
+[37m      94 Ôöé     <div class="modal-overlay" 
+(click)="[32mcloseModal[37m()">
+         ÔòÁ                                         [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'closeModal' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:98:47:
+[37m      98 Ôöé ...   <button class="modal-close" 
+(click)="[32mcloseModal[37m()">Ô£ò</button>
+         ÔòÁ                                            [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 
+'formGroup' since it isn't a known property of 'form'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:100:14:
+[37m      100 Ôöé         <form [32m[formGroup]="form"[37m 
+(ngSubmit)="submit()" class="mod...
+          ÔòÁ               [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'form' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:100:27:
+[37m      100 Ôöé         <form [formGroup]="[32mform[37m" 
+(ngSubmit)="submit()" class="mod...
+          ÔòÁ                            [32m~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'submit' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:100:45:
+[37m      100 Ôöé ...form [formGroup]="form" (ngSubmit)="[32msubmit[37m()" 
+class="modal-form">
+          ÔòÁ                                        [32m~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:105:19:
+[37m      105 Ôöé               @if ([32mgetField[37m('prenom')?.invalid && 
+getField('preno...
+          ÔòÁ                    [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:105:50:
+[37m      105 Ôöé ...if (getField('prenom')?.invalid && 
+[32mgetField[37m('prenom')?.touched) {
+          ÔòÁ                                       [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:112:19:
+[37m      112 Ôöé               @if ([32mgetField[37m('nom')?.invalid && 
+getField('nom')?.t...
+          ÔòÁ                    [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:112:47:
+[37m      112 Ôöé ...     @if (getField('nom')?.invalid && 
+[32mgetField[37m('nom')?.touched) {
+          ÔòÁ                                          [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:120:17:
+[37m      120 Ôöé             @if ([32mgetField[37m('email')?.invalid && 
+getField('email')?...
+          ÔòÁ                  [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:120:47:
+[37m      120 Ôöé ... @if (getField('email')?.invalid && 
+[32mgetField[37m('email')?.touched) {
+          ÔòÁ                                        [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:127:17:
+[37m      127 Ôöé             @if ([32mgetField[37m('motDePasse')?.invalid 
+&& getField('mot...
+          ÔòÁ                  [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'getField' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:127:52:
+[37m      127 Ôöé ...ield('motDePasse')?.invalid && 
+[32mgetField[37m('motDePasse')?.touched) {
+          ÔòÁ                                   [32m~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'creatableRoles' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:139:30:
+[37m      139 Ôöé                 @for (role of [32mcreatableRoles[37m; 
+track role) {
+          ÔòÁ                               [32m~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'roleLabels' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:140:44:
+[37m      140 Ôöé ...           <option [value]="role">{{ 
+[32mroleLabels[37m[role] }}</option>
+          ÔòÁ                                         [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'error' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:145:15:
+[37m      145 Ôöé           @if ([32merror[37m) { <div 
+class="alert-error">{{ error }}</div> }
+          ÔòÁ                [32m~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'error' does 
+not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:145:52:
+[37m      145 Ôöé           @if (error) { <div class="alert-error">{{ 
+[32merror[37m }}</div> }
+          ÔòÁ                                                     
+[32m~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'closeModal' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:147:65:
+[37m      147 Ôöé ...on" class="btn-secondary" 
+(click)="[32mcloseModal[37m()">Annuler</button>
+          ÔòÁ                                       [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'submitting' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:148:66:
+[37m      148 Ôöé ...button type="submit" class="btn-primary" 
+[disabled]="[32msubmitting[37m">
+          ÔòÁ                                                         
+[32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'submitting' 
+does not exist on type 'AdminUsersComponent'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:149:17:
+[37m      149 Ôöé               {{ [32msubmitting[37m ? 'Cr├®ation...' : 
+'Cr├®er l\'utilisa...
+          ÔòÁ                  [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'showDeleteModal' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:158:7:
+[37m      158 Ôöé   @if ([32mshowDeleteModal[37m && selectedUser) {
+          ÔòÁ        [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'selectedUser' 
+does not exist on type 'AdminUsersComponent'. Did you mean 'deleteUser'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:158:26:
+[37m      158 Ôöé   @if (showDeleteModal && [32mselectedUser[37m) {
+          ÔòÁ                           [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'showDeleteModal' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:159:40:
+[37m      159 Ôöé     <div class="modal-overlay" 
+(click)="[32mshowDeleteModal[37m = false">
+          ÔòÁ                                         [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'showDeleteModal' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:163:47:
+[37m      163 Ôöé ...lass="modal-close" (click)="[32mshowDeleteModal[37m = 
+false">Ô£ò</button>
+          ÔòÁ                                [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'selectedUser' 
+does not exist on type 'AdminUsersComponent'. Did you mean 'deleteUser'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:166:52:
+[37m      166 Ôöé ...ent supprimer <strong>{{ [32mselectedUser[37m.prenom 
+}} {{ selectedUse...
+          ÔòÁ                             [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'selectedUser' 
+does not exist on type 'AdminUsersComponent'. Did you mean 'deleteUser'?[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:166:78:
+[37m      166 Ôöé ...electedUser.prenom }} {{ [32mselectedUser[37m.nom 
+}}</strong> ? Cette ...
+          ÔòÁ                             [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'showDeleteModal' does not exist on type 'AdminUsersComponent'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:169:49:
+[37m      169 Ôöé ...btn-secondary" (click)="[32mshowDeleteModal[37m = 
+false">Annuler</button>
+          ÔòÁ                            [32m~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2554: Expected 1 arguments, 
+but got 0.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.html:170:46:
+[37m      170 Ôöé ...tton class="btn-danger" 
+(click)="[32mdeleteUser[37m()">Supprimer</button>
+          ÔòÁ                                     [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component AdminUsersComponent.
+
+    src/app/admin/pages/users/admin-users.component.ts:30:15:
+[37m      30 Ôöé   templateUrl: [32m'./admin-users.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'CommonModule'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:7:9:
+[37m      7 Ôöé import { [32mCommonModule[37m } from '@angular/common';
+        ÔòÁ          [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'Utilisateur'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:11:9:
+[37m      11 Ôöé import { [32mUtilisateur[37m, RoleUtilisateur } from 
+'../../../models';
+         ÔòÁ          [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'RoleUtilisateur'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:11:22:
+[37m      11 Ôöé import { Utilisateur, [32mRoleUtilisateur[37m } from 
+'../../../models';
+         ÔòÁ                       [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'AdminUsersComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:33:13:
+[37m      33 Ôöé export class [32mAdminUsersComponent[37m implements OnInit 
+{
+         ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'CommonModule'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:146:9:
+[37m      146 Ôöé import { [32mCommonModule[37m } from '@angular/common';
+          ÔòÁ          [32m~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'Utilisateur'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:149:9:
+[37m      149 Ôöé import { [32mUtilisateur[37m, RoleUtilisateur, 
+CreateUtilisateurDto } fro...
+          ÔòÁ          [32m~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'RoleUtilisateur'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:149:22:
+[37m      149 Ôöé import { Utilisateur, [32mRoleUtilisateur[37m, 
+CreateUtilisateurDto } fro...
+          ÔòÁ                       [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2300: Duplicate identifier 
+'AdminUsersComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:159:13:
+[37m      159 Ôöé export class [32mAdminUsersComponent[37m implements 
+OnInit {
+          ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2739: Type '{ [x: number]: 
+string; ADMIN: string; DONNEUR: string; PERSONNEL_CENTRE: string; }' is 
+missing the following properties from type 'Record<RoleUtilisateur, string>': 
+TECHNICIEN_LABO, PERSONNEL_HOPITAL[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:176:11:
+[37m      176 Ôöé   readonly [32mroleLabels[37m: Record<RoleUtilisateur, 
+string> = {
+          ÔòÁ            [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'LABO_PERSONNEL' does not exist on type 'typeof RoleUtilisateur'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:179:21:
+[37m      179 Ôöé     [RoleUtilisateur.[32mLABO_PERSONNEL[37m]: 'Personnel 
+Laboratoire',
+          ÔòÁ                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'HOPITAL' does 
+not exist on type 'typeof RoleUtilisateur'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:180:21:
+[37m      180 Ôöé     [RoleUtilisateur.[32mHOPITAL[37m]: 'Personnel 
+H├┤pital',
+          ÔòÁ                      [32m~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 
+'LABO_PERSONNEL' does not exist on type 'typeof RoleUtilisateur'.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:188:27:
+[37m      188 Ôöé     { key: RoleUtilisateur.[32mLABO_PERSONNEL[37m, label: 
+'Labos' },
+          ÔòÁ                            [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'HOPITAL' does 
+not exist on type 'typeof RoleUtilisateur'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:189:27:
+[37m      189 Ôöé     { key: RoleUtilisateur.[32mHOPITAL[37m, label: 
+'H├┤pitaux' },
+          ÔòÁ                            [32m~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG2003: No suitable injection 
+token for parameter 'cdr' of class 'AdminUsersComponent'.
+  Consider using the @Inject decorator to specify an injection token.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:193:88:
+[37m      193 Ôöé ...rvice, private fb: FormBuilder, private [32mcdr[37m: 
+ChangeDetectorRef) {
+          ÔòÁ                                            [32m~~~[0m
+
+  This type does not have a value, so it cannot be used as injection token.
+
+    src/app/admin/pages/users/admin-users.component.ts:193:93:
+[37m      193 Ôöé ...rvice, private fb: FormBuilder, private cdr: 
+[32mChangeDetectorRef[37m) {
+          ÔòÁ                                                 
+[32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2304: Cannot find name 
+'ChangeDetectorRef'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:193:93:
+[37m      193 Ôöé ...rvice, private fb: FormBuilder, private cdr: 
+[32mChangeDetectorRef[37m) {
+          ÔòÁ                                                 
+[32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'never[] | 
+Utilisateur[]' is not assignable to type 'Utilisateur[]'.
+  Type 'import("C:/Users/Youcode/HemoLink-frontend/src/app/admin/models/admin.m
+odels").Utilisateur[]' is not assignable to type 'import("C:/Users/Youcode/Hemo
+Link-frontend/src/app/models/index").Utilisateur[]'.
+    Type 'import("C:/Users/Youcode/HemoLink-frontend/src/app/admin/models/admin
+.models").Utilisateur' is not assignable to type 'import("C:/Users/Youcode/Hemo
+Link-frontend/src/app/models/index").Utilisateur'.
+      Types of property 'role' are incompatible.
+        Type 'import("C:/Users/Youcode/HemoLink-frontend/src/app/admin/models/a
+dmin.models").RoleUtilisateur' is not assignable to type 'import("C:/Users/Youc
+ode/HemoLink-frontend/src/app/models/index").RoleUtilisateur'.
+          Property 'HOPITAL' is missing in type 'import("C:/Users/Youcode/HemoL
+ink-frontend/src/app/models/index").RoleUtilisateur'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:209:6:
+[37m      209 Ôöé       [32mthis.users[37m = users;
+          ÔòÁ       [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'import("C:/Users/Y
+oucode/HemoLink-frontend/src/app/admin/models/admin.models").Utilisateur' is 
+not assignable to type 'import("C:/Users/Youcode/HemoLink-frontend/src/app/mode
+ls/index").Utilisateur'.
+  Types of property 'role' are incompatible.
+    Type 'import("C:/Users/Youcode/HemoLink-frontend/src/app/admin/models/admin
+.models").RoleUtilisateur' is not assignable to type 'import("C:/Users/Youcode/
+HemoLink-frontend/src/app/models/index").RoleUtilisateur'.
+      Property 'HOPITAL' is missing in type 'import("C:/Users/Youcode/HemoLink-
+frontend/src/app/models/index").RoleUtilisateur'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/admin/pages/users/admin-users.component.ts:256:26:
+[37m      256 Ôöé         if (idx !== -1) { [32mthis.users[idx][37m = 
+updated; this.applyFi...
+          ÔòÁ                           [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../guards/auth.guard' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/donor/donor-routing.module.ts:2:26:
+[37m      2 Ôöé import { authGuard } from [32m'../../guards/auth.guard'[37m;
+        ÔòÁ                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../services/auth.service' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/donor/donor-routing.module.ts:3:32:
+[37m      3 Ôöé import { RoleUtilisateur } from 
+[32m'../../services/auth.service'[37m;
+        ÔòÁ                                 
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'./donor-layout.component' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/donor/donor-routing.module.ts:14:13:
+[37m      14 Ôöé       import([32m'./donor-layout.component'[37m).then(m => 
+m.DonorLayoutCo...
+         ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'./pages/profile/donor-profile.component' or its corresponding type 
+declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/donor/donor-routing.module.ts:47:17:
+[37m      47 Ôöé           
+import([32m'./pages/profile/donor-profile.component'[37m).then(
+         ÔòÁ                  
+[32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'import
+("C:/Users/Youcode/hemolink-frontend/src/app/services/auth.service").RoleUtilis
+ateur' is not assignable to parameter of type 'import("C:/Users/Youcode/hemolin
+k-frontend/src/app/models/index").RoleUtilisateur'.
+  Property 'HOPITAL' is missing in type 'import("C:/Users/Youcode/hemolink-fron
+tend/src/app/models/index").RoleUtilisateur'.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/guards/auth.guard.ts:18:41:
+[37m      18 Ôöé   if (userRole && 
+requiredRoles.includes([32muserRole[37m)) return true;
+         ÔòÁ                                          [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../guards/auth.guard' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/hospital/hospital-routing.module.ts:2:26:
+[37m      2 Ôöé import { authGuard } from [32m'../../guards/auth.guard'[37m;
+        ÔòÁ                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../models' or its corresponding type declarations.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/hospital/hospital-routing.module.ts:3:32:
+[37m      3 Ôöé import { RoleUtilisateur } from [32m'../../models'[37m;
+        ÔòÁ                                 [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unsupported expression 
+in a two-way binding[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/hospital/pages/search/hospital-search.component.html:6:14:
+[37m      6 Ôöé       <select [32m[(ngModel)]="selectedBloodType()"[37m 
+class="flex-1 px-4 ...
+        ÔòÁ               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component HospitalSearchComponent.
+
+    src/app/hospital/pages/search/hospital-search.component.ts:14:15:
+[37m      14 Ôöé   templateUrl: [32m'./hospital-search.component.html'[37m,
+         ÔòÁ                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../guards/auth.guard' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/labo/labo-routing.module.ts:2:26:
+[37m      2 Ôöé import { authGuard } from [32m'../../guards/auth.guard'[37m;
+        ÔòÁ                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../models' or its corresponding type declarations.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/labo/labo-routing.module.ts:3:32:
+[37m      3 Ôöé import { RoleUtilisateur } from [32m'../../models'[37m;
+        ÔòÁ                                 [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../guards/auth.guard' or its corresponding type declarations.[0m 
+[1m[35m[plugin angular-compiler][0m
+
+    src/app/personnel/personnel-routing.module.ts:2:26:
+[37m      2 Ôöé import { authGuard } from [32m'../../guards/auth.guard'[37m;
+        ÔòÁ                           [32m~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 
+'../../models' or its corresponding type declarations.[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/personnel/personnel-routing.module.ts:3:32:
+[37m      3 Ôöé import { RoleUtilisateur } from [32m'../../models'[37m;
+        ÔòÁ                                 [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mMultiple exports with the same 
+name "AdminUsersComponent"[0m
+
+    src/app/admin/pages/users/admin-users.component.ts:458:13:
+[37m      458 Ôöé export class [32mAdminUsersComponent[37m implements 
+OnInit {
+          ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  The name "AdminUsersComponent" was originally exported here:
+
+    src/app/admin/pages/users/admin-users.component.ts:311:13:
+[37m      311 Ôöé export class [32mAdminUsersComponent[37m implements 
+OnInit {
+          ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mThe symbol 
+"AdminUsersComponent" has already been declared[0m
+
+    src/app/admin/pages/users/admin-users.component.ts:458:13:
+[37m      458 Ôöé export class [32mAdminUsersComponent[37m implements 
+OnInit {
+          ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  The symbol "AdminUsersComponent" was originally declared here:
+
+    src/app/admin/pages/users/admin-users.component.ts:311:13:
+[37m      311 Ôöé export class [32mAdminUsersComponent[37m implements 
+OnInit {
+          ÔòÁ              [32m~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

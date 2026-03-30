@@ -1,20 +1,23 @@
 /**
- * Test Labo Service - Manages all laboratory test API operations
+ * Test Labo Service - Laboratory Test Management
  * Endpoints: /api/test-labo
+ * Manages lab screening tests: HIV, Hepatitis B/C, Syphilis
+ * Test results drive blood bag eligibility
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { TestLabo, ApiResponse, PageableResponse } from '../models';
+import { TestLabo, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestLaboService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/test-labo';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Lab Tests

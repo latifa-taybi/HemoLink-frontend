@@ -37,8 +37,8 @@
           <div class="rdv-card status-{{rdv.statut}}">
             <div class="rdv-header">
               <div class="rdv-date">
-                <span class="rdv-day">{{ rdv.dateHeure | date:'dd MMM yyyy':'':'fr' }}</span>
-                <span class="rdv-time">{{ rdv.dateHeure | date:'HH:mm':'':'fr' }}</span>
+                <span class="rdv-day">{{ rdv.dateRendezVous | date:'dd MMM yyyy':'':'fr' }}</span>
+                <span class="rdv-time">{{ rdv.dateRendezVous | date:'HH:mm':'':'fr' }}</span>
               </div>
               <span class="badge-status {{rdv.statut}}">
                 {{ getStatusLabel(rdv.statut) }}
@@ -109,7 +109,7 @@
         
         <div class="form-group">
           <label for="date-heure">Date et Heure du rendez-vous *</label>
-          <input type="datetime-local" id="date-heure" class="form-control" [(ngModel)]="newAppointment.dateHeure" required>
+          <input type="datetime-local" id="date-heure" class="form-control" [(ngModel)]="newAppointment.dateRendezVous" required>
           <small style="color:#6b7280;font-size:0.75rem;margin-top:4px;">
             Note: Vous devez choisir un créneau pendant les heures d'ouverture.
           </small>
@@ -120,7 +120,7 @@
         <button type="button" class="btn-cancel" (click)="showModal = false">Annuler</button>
         <button type="button" class="btn-submit" 
                 (click)="submitBooking()" 
-                [disabled]="!newAppointment.dateHeure || !newAppointment.centreId || newAppointment.centreId === 0 || loading">
+                [disabled]="!newAppointment.dateRendezVous || !newAppointment.centreId || newAppointment.centreId === 0 || loading">
           {{ loading ? 'Réservation...' : 'Confirmer le rendez-vous' }}
         </button>
       </div>

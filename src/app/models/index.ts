@@ -1,14 +1,54 @@
 /**
  * HemoLink Frontend Models - All interfaces matching backend DTOs
+ * Synchronized with Spring Boot backend (v0.0.1)
  */
 
-import { RoleUtilisateur, GroupeSanguin, StatutCommande, StatutRendezVous, StatutSang } from '../services/auth.service';
+// ═══════════════════════════════════════════════════════════════
+// ENUMS (Matching Java Backend)
+// ═══════════════════════════════════════════════════════════════
 
-// Re-export enums for easier access
-export { RoleUtilisateur, GroupeSanguin, StatutCommande, StatutRendezVous, StatutSang };
+export enum RoleUtilisateur {
+  ADMIN = 'ADMIN',
+  DONNEUR = 'DONNEUR',
+  HOPITAL = 'HOPITAL',
+  PERSONNEL_CENTRE = 'PERSONNEL_CENTRE',
+  LABO_PERSONNEL = 'LABO_PERSONNEL'
+}
+
+export enum GroupeSanguin {
+  O_PLUS = 'O_PLUS',
+  O_MINUS = 'O_MINUS',
+  A_PLUS = 'A_PLUS',
+  A_MINUS = 'A_MINUS',
+  B_PLUS = 'B_PLUS',
+  B_MINUS = 'B_MINUS',
+  AB_PLUS = 'AB_PLUS',
+  AB_MINUS = 'AB_MINUS'
+}
+
+export enum StatutSang {
+  AVAILABLE = 'AVAILABLE',
+  QUARANTINE = 'QUARANTINE',
+  USED = 'USED',
+  EXPIRED = 'EXPIRED'
+}
+
+export enum StatutRendezVous {
+  SCHEDULED = 'SCHEDULED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum StatutCommande {
+  PENDING = 'PENDING',
+  PREPARING = 'PREPARING',
+  SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED'
+}
+
 
 // ═══════════════════════════════════════════════════════════════
-// USER MODELS
+// UTILISATEURS (Users)
 // ═══════════════════════════════════════════════════════════════
 
 export interface Utilisateur {
@@ -17,10 +57,21 @@ export interface Utilisateur {
   nom: string;
   email: string;
   telephone?: string;
-  adresse?: string;
   role: RoleUtilisateur;
   actif: boolean;
-  dateCreation: string;
+  creeLe: Date;
+}
+
+export interface UtilisateurDto {
+  prenom: string;
+  nom: string;
+  email: string;
+  telephone?: string;
+  role: RoleUtilisateur;
+}
+
+export interface UtilisateurResponseDto extends UtilisateurDto {
+  id: number;
 }
 
 export interface InscriptionDto {
@@ -29,139 +80,152 @@ export interface InscriptionDto {
   email: string;
   motDePasse: string;
   telephone?: string;
+  groupeSanguin?: GroupeSanguin;
+  dateNaissance?: Date;
+  poids?: number;
 }
 
-export interface LoginDto {
+export interface AuthLoginDto {
   email: string;
   motDePasse: string;
 }
 
 export interface AuthTokenResponseDto {
   token: string;
+  refreshToken: string;
   tokenType: string;
-  expiresIn?: number;
-  user?: Utilisateur;
+  expiresIn: number;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// DONOR MODELS
+// DONNEUR (Donors)
 // ═══════════════════════════════════════════════════════════════
 
 export interface Donneur {
   id: number;
-  utilisateur: Utilisateur;
+  utilisateurId: number;
   groupeSanguin: GroupeSanguin;
-  dateNaissance: string;
-  derniereDate?: string;
-  eligibilite: boolean;
+  dateNaissance: Date;
+  poids: number;
+  dateDernierDon?: Date;
+  nombreDonsAnnuel: number;
 }
 
 export interface DonneurDto {
-  id?: number;
   utilisateurId: number;
   groupeSanguin: GroupeSanguin;
-  dateNaissance: string;
-  eligibilite?: boolean;
+  dateNaissance: Date;
+  poids: number;
 }
 
+export interface DonneurResponseDto extends DonneurDto {
+  id: number;
+}
+
+
 // ═══════════════════════════════════════════════════════════════
-// DONATION MODELS
+// DON (Donations)
 // ═══════════════════════════════════════════════════════════════
 
 export interface Don {
   id: number;
-  donneur: Donneur;
-  centre: CentreCollecte;
-  dateDon: string;
+  donneurId: number;
+  centreId: number;
+  dateDon: Date;
   volumeMl: number;
 }
 
 export interface DonDto {
-  id?: number;
   donneurId: number;
   centreId: number;
-  dateDon: string;
+  dateDon: Date;
   volumeMl: number;
 }
 
+export interface DonResponseDto extends DonDto {
+  id: number;
+}
+
 // ═══════════════════════════════════════════════════════════════
-// BLOOD BAG MODELS
+// POCHE SANG (Blood Units)
 // ═══════════════════════════════════════════════════════════════
 
 export interface PocheSang {
   id: number;
-  don: Don;
+  donId: number;
   groupeSanguin: GroupeSanguin;
-  dateCollection: string;
-  dateExpiration: string;
   statut: StatutSang;
+  dateCollecte: Date;
+  dateExpiration: Date;
 }
 
 export interface PocheSangDto {
-  id?: number;
   donId: number;
   groupeSanguin: GroupeSanguin;
-  dateCollection: string;
-  dateExpiration: string;
-  statut: StatutSang;
+  statut?: StatutSang;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ORDER MODELS
-// ═══════════════════════════════════════════════════════════════
-
-export interface CommandeSang {
+export interface PocheSangResponseDto extends PocheSangDto {
   id: number;
-  hopital: Hopital;
-  centreColl: CentreCollecte;
-  groupeSanguin: GroupeSanguin;
-  quantite: number;
-  montant: number;
-  statut: StatutCommande;
-  dateCreation: string;
-  dateExpedition?: string;
-  dateLivraison?: string;
-}
-
-export interface CommandeSangDto {
-  id?: number;
-  hopitalId: number;
-  centreColl: number;
-  groupeSanguin: GroupeSanguin;
-  quantite: number;
-  statut?: StatutCommande;
-  montant?: number;
-}
-
-export interface ElementCommande {
-  id: number;
-  commande: CommandeSang;
-  pocheSang: PocheSang;
-  quantite: number;
+  dateCollecte: Date;
+  dateExpiration: Date;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// APPOINTMENT MODELS
+// TEST LABO (Lab Tests)
+// ═══════════════════════════════════════════════════════════════
+
+export interface TestLabo {
+  id: number;
+  pocheSangId: number;
+  hiv: boolean;
+  hepatitisB: boolean;
+  hepatitisC: boolean;
+  syphilis: boolean;
+  testDate: Date;
+  technicienLaboId: number;
+}
+
+export interface TestLaboDto {
+  pocheSangId: number;
+  hiv: boolean;
+  hepatitisB: boolean;
+  hepatitisC: boolean;
+  syphilis: boolean;
+  technicienLaboId: number;
+}
+
+export interface TestLaboResponseDto extends TestLaboDto {
+  id: number;
+  testDate: Date;
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// RENDEZ-VOUS (Appointments)
 // ═══════════════════════════════════════════════════════════════
 
 export interface RendezVous {
   id: number;
-  donneur: Donneur;
-  centre: CentreCollecte;
-  dateRV: string;
+  donneurId: number;
+  centreId: number;
+  dateHeure: Date;
   statut: StatutRendezVous;
 }
 
 export interface RendezVousDto {
-  id?: number;
   donneurId: number;
   centreId: number;
-  dateRV: string;
-  statut?: StatutRendezVous;
+  dateHeure: Date;
+}
+
+export interface RendezVousResponseDto extends RendezVousDto {
+  id: number;
+  statut: StatutRendezVous;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CENTER MODELS
+// CENTRE DE COLLECTE (Collection Centers)
 // ═══════════════════════════════════════════════════════════════
 
 export interface CentreCollecte {
@@ -169,21 +233,35 @@ export interface CentreCollecte {
   nom: string;
   adresse: string;
   ville: string;
+  latitude: number;
+  longitude: number;
   telephone: string;
-  horaires?: string;
+  horaires?: Horaire[];
 }
 
 export interface CentreCollecteDto {
-  id?: number;
   nom: string;
   adresse: string;
   ville: string;
+  latitude: number;
+  longitude: number;
   telephone: string;
-  horaires?: string;
+}
+
+export interface CentreCollecteResponseDto extends CentreCollecteDto {
+  id: number;
+}
+
+export interface Horaire {
+  id: number;
+  jour: string;
+  ouverture: string;
+  fermeture: string;
+  ouvert: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// HOSPITAL MODELS
+// HOPITAL (Hospitals)
 // ═══════════════════════════════════════════════════════════════
 
 export interface Hopital {
@@ -195,84 +273,136 @@ export interface Hopital {
 }
 
 export interface HopitalDto {
-  id?: number;
   nom: string;
   adresse: string;
   ville: string;
   telephone: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// LAB TEST MODELS
-// ═══════════════════════════════════════════════════════════════
-
-export interface TestLabo {
+export interface HopitalResponseDto extends HopitalDto {
   id: number;
-  pocheSang: PocheSang;
-  dateTest: string;
-  resultat: string;
-  valide: boolean;
-}
-
-export interface TestLaboDto {
-  id?: number;
-  pocheSangId: number;
-  dateTest: string;
-  resultat: string;
-  valide: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// NOTIFICATION MODELS
+// COMMANDE SANG (Blood Orders)
+// ═══════════════════════════════════════════════════════════════
+
+export interface CommandeSang {
+  id: number;
+  hopitalId: number;
+  groupeSanguin: GroupeSanguin;
+  quantite: number;
+  urgenceVitale: boolean;
+  statut: StatutCommande;
+  orderDate: Date;
+}
+
+export interface CommandeSangDto {
+  hopitalId: number;
+  groupeSanguin: GroupeSanguin;
+  quantite: number;
+  urgenceVitale?: boolean;
+}
+
+export interface CommandeSangResponseDto extends CommandeSangDto {
+  id: number;
+  statut: StatutCommande;
+  orderDate: Date;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ELEMENT COMMANDE (Order Items)
+// ═══════════════════════════════════════════════════════════════
+
+export interface ElementCommande {
+  id: number;
+  commandeId: number;
+  pocheSangId: number;
+}
+
+export interface ElementCommandeDto {
+  commandeId: number;
+  pocheSangId: number;
+}
+
+export interface ElementCommandeResponseDto extends ElementCommandeDto {
+  id: number;
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// NOTIFICATION
 // ═══════════════════════════════════════════════════════════════
 
 export interface Notification {
   id: number;
-  utilisateur: Utilisateur;
+  utilisateurId: number;
   message: string;
-  dateCreation: string;
-  lue: boolean;
-  type?: string;
-  priorite?: string;
+  lu: boolean;
+  creeLe: Date;
 }
 
 export interface NotificationDto {
-  id?: number;
   utilisateurId: number;
   message: string;
-  lue?: boolean;
-  type?: string;
-  priorite?: string;
+  lu?: boolean;
+  creeLe?: Date;
+}
+
+export interface NotificationResponseDto extends NotificationDto {
+  id: number;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// STATISTICS MODELS
+// STATISTIQUES
 // ═══════════════════════════════════════════════════════════════
 
 export interface StatistiquesStock {
+  groupeSanguin: GroupeSanguin;
+  totalDisponible: number;
+  totalReserve: number;
+  totalExpire: number;
+  lastUpdated: Date;
+}
+
+export interface StatistiquesStockResponseDto {
   id: number;
-  stockActuel: number;
+  groupeSanguin: GroupeSanguin;
   quantiteDisponible: number;
-  groupeSanguin: GroupeSanguin;
-  dateMAJ: string;
+  quantiteReservee: number;
+  quantiteExpire: number;
+  dateSnapshot: Date;
 }
 
-export interface StatistiquesDto {
-  totalDonneurs: number;
+export interface StatistiquesGaspillage {
+  periodeDebut: Date;
+  periodeFin: Date;
+  nombreEcartees: number;
+  nombreExpirees: number;
+  taux: number;
+}
+
+export interface StatistiquesDons {
   totalDons: number;
-  totalCommandes: number;
-  stockTotal: number;
-  stockParGroupe: StatistiqueParGroupe[];
-}
-
-export interface StatistiqueParGroupe {
-  groupeSanguin: GroupeSanguin;
-  quantite: number;
-  disponible: number;
+  totalDonneurs: number;
+  donsMois: number;
+  donneursActifs: number;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// API RESPONSE MODELS
+// ERROR HANDLING
+// ═══════════════════════════════════════════════════════════════
+
+export interface ApiErrorResponse {
+  timestamp: Date;
+  status: number;
+  error: string;
+  message: string;
+  path: string;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HELPER TYPES
 // ═══════════════════════════════════════════════════════════════
 
 export interface ApiResponse<T> {
@@ -295,12 +425,4 @@ export interface PageableResponse<T> {
   last: boolean;
   first: boolean;
   numberOfElements: number;
-}
-
-export interface ErrorResponse {
-  timestamp: string;
-  status: number;
-  error: string;
-  message: string;
-  path: string;
 }

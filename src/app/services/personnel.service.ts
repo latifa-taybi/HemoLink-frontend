@@ -6,7 +6,7 @@ export interface RendezVous {
   id: number;
   centreCollecteId: number;
   donneurId: number;
-  dateHeure: string;
+  dateRendezVous: string;
   statut: 'PLANIFIE' | 'ANNULE' | 'TERMINE';
   donneurPrenom: string;
   donneurNom: string;
@@ -42,8 +42,11 @@ export class PersonnelService {
   /**
    * Récupère tous les rendez-vous d'un centre donné
    */
-  getRendezVousDuCentre(centreId: number): Observable<RendezVous[]> {
-    const params = new HttpParams().set('centreId', centreId.toString());
+  getRendezVousDuCentre(centreId: number, jour?: string): Observable<RendezVous[]> {
+    let params = new HttpParams().set('centreId', centreId.toString());
+    if (jour) {
+      params = params.set('jour', jour);
+    }
     return this.http.get<RendezVous[]>(`${this.apiUrl}/rendez-vous`, { params });
   }
 

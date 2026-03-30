@@ -55,6 +55,8 @@ export interface UtilisateurResponseDto {
   role: RoleUtilisateur;
   actif: boolean;
   creeLe: string;
+  centreCollecteId?: number;
+  hopitalId?: number;
 }
 
 @Injectable({
@@ -153,27 +155,39 @@ export class AuthService {
       // Try multiple ways to extract ID - be VERY flexible
       let id = payload.userId 
         || payload.id 
+        || payload.uid
         || payload.sub?.split('-')[0]
-        || payload.user_id
-        || parseInt(payload.sub?.split('@')[0]) 
-        || null;
+        || payload.user_id;
       
-      // If we still don't have an ID, try to extract from other common fields
-      if (!id) {
-        console.warn('NO ID found in JWT payload. Payload keys:', Object.keys(payload));
-        return null;
+      // Try to parse as number
+      let userId: number | null = id ? Number(id) : null;
+      
+      // If we still don't have a valid numeric ID, try fallbacks
+      if (!userId || isNaN(userId) || userId <= 0) {
+        // Last resort: use hash of email as ID
+        if (payload.email || payload.sub) {
+          const identifier = payload.email || payload.sub;
+          // Create a simple hash of the identifier
+          const hash = identifier.split('').reduce((acc: number, char: string) => {
+            return ((acc << 5) - acc) + char.charCodeAt(0);
+          }, 0);
+          userId = Math.abs(hash) || 1;
+          console.warn(`No numeric ID found in JWT. Using hash of ${identifier} as fallback ID: ${userId}`);
+        } else {
+          console.error('Invalid user ID extracted:', id, '-> NaN. No email/sub fallback available');
+          return null;
+        }
       }
-
-      // Convert to number and validate
-      const userId = Number(id);
-      if (isNaN(userId) || userId <= 0) {
-        console.error('Invalid user ID extracted:', id, '-> NaN');
+      
+      // Ensure userId is valid at this point
+      if (!userId || userId <= 0) {
+        console.error('Failed to extract valid user ID from JWT');
         return null;
       }
       
       // Extract other user info from JWT payload with fallbacks
       return {
-        id: userId,
+        id: userId as number,
         prenom: payload.prenom || payload.firstName || payload.given_name || 'Utilisateur',
         nom: payload.nom || payload.lastName || payload.family_name || '',
         email: payload.email || payload.sub || '',

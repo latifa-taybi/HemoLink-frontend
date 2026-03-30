@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PersonnelService } from '../../../services/personnel.service';
+import { AuthService } from '../../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -23,6 +24,7 @@ export class PersonnelOverviewComponent implements OnInit {
 
   constructor(
     private personnelService: PersonnelService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -31,7 +33,8 @@ export class PersonnelOverviewComponent implements OnInit {
   }
 
   chargerKpis(): void {
-    const centreId = 1; // Temporairement fixé à 1, idéalement : getUser().centreId
+    const user = this.authService.getUser();
+    const centreId = user?.centreCollecteId || 1; 
     
     // Pour filtrer les RDV d'aujourd'hui
     const aujourdhuiStr = new Date().toISOString().split('T')[0];
@@ -40,17 +43,34 @@ export class PersonnelOverviewComponent implements OnInit {
     this.loading = true;
 
     forkJoin({
-      rdvs: this.personnelService.getRendezVousDuCentre(centreId),
+      rdvs: this.personnelService.getRendezVousDuCentre(centreId, aujourdhuiStr),
       dons: this.personnelService.getDonsParCentre(centreId)
     }).subscribe({
       next: (data) => {
-        // Filtrer les RDV du jour
-        const rdvsJour = data.rdvs.filter(r => r.dateHeure.startsWith(aujourdhuiStr));
+        // rdvs are already filtered by the backend for today
+        const rdvsJour = data.rdvs.map(r => {
+          if (Array.isArray(r.dateRendezVous)) {
+            const arr: any = r.dateRendezVous;
+            const y = arr[0], m = arr[1].toString().padStart(2, '0'), d = arr[2].toString().padStart(2, '0');
+            const h = (arr[3]||0).toString().padStart(2, '0'), min = (arr[4]||0).toString().padStart(2, '0');
+            (r as any).dateRendezVous = `${y}-${m}-${d}T${h}:${min}:00`;
+          }
+          return r;
+        });
+        
+        const dons = data.dons.map(don => {
+          if (Array.isArray(don.dateDon)) {
+            const arr: any = don.dateDon;
+            const y = arr[0], m = arr[1].toString().padStart(2, '0'), d = arr[2].toString().padStart(2, '0');
+            (don as any).dateDon = `${y}-${m}-${d}T00:00:00`;
+          }
+          return don;
+        });
         
         this.kpis = {
           rdvAujourdhui: rdvsJour.length,
           rdvTermines: rdvsJour.filter(r => r.statut === 'TERMINE').length,
-          donsRecueillis: data.dons.filter(d => d.dateDon.startsWith(aujourdhuiStr)).length
+          donsRecueillis: dons.filter(d => d.dateDon.startsWith(aujourdhuiStr)).length
         };
         this.error = null;
         this.loading = false;

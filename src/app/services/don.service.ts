@@ -1,20 +1,22 @@
 /**
- * Don Service - Manages all donation API operations
+ * Don Service - Donation Recording & Tracking
  * Endpoints: /api/dons
+ * Manages donation records, history, and analytics
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { Don, GroupeSanguin, ApiResponse, PageableResponse } from '../models';
+import { Don, GroupeSanguin, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DonService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/dons';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Donations
@@ -28,11 +30,7 @@ export class DonService {
     size: number = 20,
     filters?: any
   ): Observable<PageableResponse<Don>> {
-    let params = this.api.buildParams({
-      page,
-      size,
-      ...filters
-    });
+    let params = this.api.buildParams({ page, size, ...filters });
     return this.api.get<PageableResponse<Don>>(this.endpoint, params);
   }
 
@@ -51,10 +49,16 @@ export class DonService {
   }
 
   /**
-   * Get donations by collection center
+   * Get donations by date range
+   * @param startDate - Start date (YYYY-MM-DD)
+   * @param endDate - End date (YYYY-MM-DD)
    */
-  getDonsByCentre(centreId: number): Observable<Don[]> {
-    return this.api.get<Don[]>(`${this.endpoint}/centre/${centreId}`);
+  getDonsByDateRange(startDate: Date, endDate: Date): Observable<Don[]> {
+    let params = this.api.buildParams({
+      startDate: this.formatDate(startDate),
+      endDate: this.formatDate(endDate)
+    });
+    return this.api.get<Don[]>(`${this.endpoint}/date-range`, params);
   }
 
   /**
@@ -65,50 +69,60 @@ export class DonService {
   }
 
   /**
-   * Get Today's donations
+   * Get donations by center
    */
-  getTodayDons(): Observable<Don[]> {
+  getDonsByCenter(centreId: number): Observable<Don[]> {
+    return this.api.get<Don[]>(`${this.endpoint}/center/${centreId}`);
+  }
+
+  /**
+   * Get donations from today
+   */
+  getTodaysDonations(): Observable<Don[]> {
     return this.api.get<Don[]>(`${this.endpoint}/today`);
   }
 
   /**
-   * Get donations by date
+   * Get donations from this week
    */
-  getDonsByDate(date: string): Observable<Don[]> {
-    const params = this.api.buildParams({ date });
-    return this.api.get<Don[]>(`${this.endpoint}/date`, params);
+  getWeeksDonations(): Observable<Don[]> {
+    return this.api.get<Don[]>(`${this.endpoint}/week`);
   }
 
   /**
-   * Get donations by date range
+   * Get donations from this month
    */
-  getDonsByDateRange(
-    startDate: string,
-    endDate: string
-  ): Observable<Don[]> {
-    const params = this.api.buildParams({ startDate, endDate });
-    return this.api.get<Don[]>(`${this.endpoint}/date-range`, params);
+  getMonthsDonations(): Observable<Don[]> {
+    return this.api.get<Don[]>(`${this.endpoint}/month`);
   }
 
   /**
-   * Get donation with full details (donor info, blood bags, tests)
+   * Get total collected volume (ML)
    */
-  getDonDetails(id: number): Observable<Don> {
-    return this.api.get<Don>(`${this.endpoint}/${id}/details`);
+  getTotalCollectedVolume(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/total-volume`);
   }
 
   /**
-   * Get donation history for donor
+   * Get average donation volume
    */
-  getDonneurDonationHistory(donneurId: number): Observable<Don[]> {
-    return this.api.get<Don[]>(`${this.endpoint}/donneur/${donneurId}/history`);
+  getAverageDonationVolume(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/average-volume`);
   }
 
   /**
-   * Get donations pending labo tests
+   * Get collection efficiency report
    */
-  getDonsPendingTests(): Observable<Don[]> {
-    return this.api.get<Don[]>(`${this.endpoint}/pending-tests`);
+  getEfficiencyReport(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/reports/efficiency`);
+  }
+
+  /**
+   * Get donation trend by month
+   */
+  getDonationTrend(months: number = 12): Observable<any> {
+    let params = this.api.buildParams({ months });
+    return this.api.get<any>(`${this.endpoint}/trends`, params);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -116,32 +130,24 @@ export class DonService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Create new donation record
+   * Record new donation
    */
-  createDon(don: Partial<Don>): Observable<Don> {
+  recordDonation(don: Partial<Don>): Observable<Don> {
     return this.api.post<Don>(this.endpoint, don);
   }
 
   /**
-   * Record donation with blood bags
+   * Record donation with blood bag creation
    */
-  recordDonation(
-    donneurId: number,
-    centreId: number,
-    volumeCollecte: number,
-    groupeSanguin: GroupeSanguin
-  ): Observable<Don> {
-    return this.api.post<Don>(`${this.endpoint}/record`, {
-      donneurId,
-      centreId,
-      volumeCollecte,
-      groupeSanguin,
-      dateHeure: new Date().toISOString()
-    });
+  recordDonationWithBag(don: Partial<Don>, bagDetails: any): Observable<any> {
+    return this.api.post<any>(
+      `${this.endpoint}/with-bag`,
+      { don, bagDetails }
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // PUT - Update Donation
+  // PUT/PATCH - Update Donation
   // ═══════════════════════════════════════════════════════════════
 
   /**
@@ -152,26 +158,13 @@ export class DonService {
   }
 
   /**
-   * Add notes/comments to donation
+   * Update donation volume
    */
-  addNotesToDon(id: number, notes: string): Observable<Don> {
-    return this.api.patch<Don>(`${this.endpoint}/${id}/notes`, { notes });
-  }
-
-  /**
-   * Add blood bag to donation
-   */
-  addBloodBagToDon(donId: number, pocheSangId: number): Observable<Don> {
-    return this.api.post<Don>(`${this.endpoint}/${donId}/blood-bags`, {
-      pocheSangId
-    });
-  }
-
-  /**
-   * Remove blood bag from donation
-   */
-  removeBloodBagFromDon(donId: number, pocheSangId: number): Observable<Don> {
-    return this.api.delete<Don>(`${this.endpoint}/${donId}/blood-bags/${pocheSangId}`);
+  updateVolume(donId: number, volumeMl: number): Observable<Don> {
+    return this.api.patch<Don>(
+      `${this.endpoint}/${donId}/volume`,
+      { volumeMl }
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -179,7 +172,7 @@ export class DonService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Delete donation record (usually logical delete)
+   * Delete donation record
    */
   deleteDon(id: number): Observable<void> {
     return this.api.delete<void>(`${this.endpoint}/${id}`);
@@ -190,45 +183,34 @@ export class DonService {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Get donation statistics
+   * Get donation statistics by blood group
    */
-  getDonStats(): Observable<any> {
+  getStatsByBloodGroup(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/by-blood-group`);
+  }
+
+  /**
+   * Get donation statistics by center
+   */
+  getStatsByCenter(): Observable<any> {
+    return this.api.get<any>(`${this.endpoint}/stats/by-center`);
+  }
+
+  /**
+   * Get all donations statistics
+   */
+  getDonsStats(): Observable<any> {
     return this.api.get<any>(`${this.endpoint}/stats`);
   }
 
-  /**
-   * Get donation statistics for a donor
-   */
-  getDonneurDonStats(donneurId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/donneur/${donneurId}/stats`);
-  }
+  // ═══════════════════════════════════════════════════════════════
+  // HELPER METHODS
+  // ═══════════════════════════════════════════════════════════════
 
-  /**
-   * Get collection center donation statistics
-   */
-  getCentreDonStats(centreId: number): Observable<any> {
-    return this.api.get<any>(`${this.endpoint}/centre/${centreId}/stats`);
-  }
-
-  /**
-   * Get total collected volume
-   */
-  getTotalCollectedVolume(): Observable<number> {
-    return this.api.get<number>(`${this.endpoint}/total-volume`);
-  }
-
-  /**
-   * Get average donation volume
-   */
-  getAverageDonationVolume(): Observable<number> {
-    return this.api.get<number>(`${this.endpoint}/average-volume`);
-  }
-
-  /**
-   * Get donation efficiency report
-   */
-  getEfficiencyReport(startDate: string, endDate: string): Observable<any> {
-    const params = this.api.buildParams({ startDate, endDate });
-    return this.api.get<any>(`${this.endpoint}/efficiency-report`, params);
+  private formatDate(date: Date): string {
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${month}-${day}`;
   }
 }

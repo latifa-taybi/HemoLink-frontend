@@ -46,18 +46,80 @@ export class DonorLayoutComponent implements OnInit {
     // Vérifier que l'ID est valide (pas 0, pas négatif, pas NaN)
     if (!user || !user.id || user.id <= 0 || isNaN(user.id)) {
       console.error('ID utilisateur invalide:', user?.id, 'isNaN:', isNaN(user?.id));
+      // Use JWT data as fallback
+      this.donor = {
+        id: user?.id || 0,
+        utilisateurId: user?.id || 0,
+        groupeSanguin: 'O_POS' as any,
+        nombreDonsAnnuel: 0,
+        nom: user?.nom || '',
+        prenom: user?.prenom || 'Utilisateur',
+        email: user?.email || '',
+        telephone: user?.telephone || ''
+      };
+      this.cdr.markForCheck();
       return;
     }
 
+    // Try to fetch full profile, but don't fail if not found
     this.donorService.getProfile(user.id).subscribe({
       next: (d) => {
         this.donor = d;
         this.cdr.markForCheck();
       },
-      error: (err) => {
-        console.error('Erreur lors du chargement du profil donneur', err);
-        if (err.status === 404) {
-          console.error('Donneur non trouvé avec ID:', user.id);
+      error: (err: any) => {
+        console.warn('Profil donneur complet non disponible, utilisation données JWT:', err?.status);
+        
+        // Try email-based lookup
+        if (user?.email) {
+          this.donorService.getDonneurByEmail(user.email).subscribe({
+            next: (donneur: any) => {
+              if (donneur) {
+                this.donor = donneur;
+                console.log('Donneur trouvé par email pour layout:', donneur.email);
+              } else {
+                // Fallback to JWT data
+                this.donor = {
+                  id: user?.id || 0,
+                  utilisateurId: user?.id || 0,
+                  groupeSanguin: 'O_POS' as any,
+                  nombreDonsAnnuel: 0,
+                  nom: user?.nom || '',
+                  prenom: user?.prenom || 'Utilisateur',
+                  email: user?.email || '',
+                  telephone: user?.telephone || ''
+                };
+              }
+              this.cdr.markForCheck();
+            },
+            error: (err2: any) => {
+              console.warn('Email lookup failed, using JWT data:', err2);
+              this.donor = {
+                id: user?.id || 0,
+                utilisateurId: user?.id || 0,
+                groupeSanguin: 'O_POS' as any,
+                nombreDonsAnnuel: 0,
+                nom: user?.nom || '',
+                prenom: user?.prenom || 'Utilisateur',
+                email: user?.email || '',
+                telephone: user?.telephone || ''
+              };
+              this.cdr.markForCheck();
+            }
+          });
+        } else {
+          // Fallback to JWT data
+          this.donor = {
+            id: user?.id || 0,
+            utilisateurId: user?.id || 0,
+            groupeSanguin: 'O_POS' as any,
+            nombreDonsAnnuel: 0,
+            nom: user?.nom || '',
+            prenom: user?.prenom || 'Utilisateur',
+            email: user?.email || '',
+            telephone: user?.telephone || ''
+          };
+          this.cdr.markForCheck();
         }
       },
     });
@@ -73,9 +135,12 @@ export class DonorLayoutComponent implements OnInit {
   }
 
   navItems = [
-    { path: '/donor/overview',      label: 'Tableau de bord',  icon: 'dashboard' },
-    { path: '/donor/history',       label: 'Mon Historique',   icon: 'history'   },
-    { path: '/donor/find-centers',  label: 'Trouver un centre', icon: 'map'      },
-    { path: '/donor/appointments',  label: 'Mes Rendez-vous',  icon: 'calendar'  },
+    { path: 'overview',       label: 'Tableau de bord',  icon: 'dashboard' },
+    { path: 'profile',        label: 'Mon Profil',       icon: 'person'    },
+    { path: 'eligibility',    label: 'Puis-je donner?',  icon: 'check'     },
+    { path: 'history',        label: 'Mon Historique',   icon: 'history'   },
+    { path: 'centers',        label: 'Centres',          icon: 'location'  },
+    { path: 'appointments',   label: 'Mes RDV',          icon: 'calendar'  },
+    { path: 'notifications',  label: 'Notifications',    icon: 'bell'      },
   ];
 }

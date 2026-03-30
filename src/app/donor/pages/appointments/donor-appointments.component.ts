@@ -31,7 +31,7 @@ export class DonorAppointmentsComponent implements OnInit {
   bookingError: string | null = null;
 
   newAppointment: CreateRendezVousDto = {
-    dateHeure: '',
+    dateRendezVous: '',
     centreId: 0,
     donneurId: 0
   };
@@ -64,7 +64,6 @@ export class DonorAppointmentsComponent implements OnInit {
   }
 
   private loadDonorData(user: any): void {
-    // Vérifier que l'ID est valide (pas 0, pas négatif, pas NaN)
     if (!user || !user.id || user.id <= 0 || isNaN(user.id)) {
       this.error = 'Erreur: ID utilisateur invalide ou manquant. Veuillez vous reconnecter.';
       this.stopLoading();
@@ -72,7 +71,6 @@ export class DonorAppointmentsComponent implements OnInit {
       return;
     }
 
-    // First load centers
     this.centersService.getAll().subscribe({
       next: (c) => {
         this.centers = c;
@@ -93,14 +91,34 @@ export class DonorAppointmentsComponent implements OnInit {
             this.newAppointment.donneurId = d.id;
             this.loadAppointments(d.id);
           },
-          error: (err) => {
+          error: (err: any) => {
             console.error("Erreur profil:", err);
-            if (err.status === 404) {
-              this.error = `Donneur non trouvé (ID: ${user.id}). Vérifiez que vous êtes inscrit.`;
+            // Fallback 1: Search donors by email (more reliable than ID)
+            if (user.email) {
+              this.donorService.getDonneurByEmail(user.email).subscribe({
+                next: (donneur: Donneur | null) => {
+                  if (donneur) {
+                    this.donor = donneur;
+                    this.newAppointment.donneurId = donneur.id;
+                    this.loadAppointments(donneur.id);
+                    console.log('Donneur trouvé par email:', donneur.email, '-> ID:', donneur.id);
+                  } else {
+                    console.warn('Aucun donneur trouvé avec email:', user.email);
+                    this.error = 'Aucun profil donneur trouvé pour votre compte. Veuillez contacter le support.';
+                    this.stopLoading();
+                  }
+                },
+                error: (err2: any) => {
+                  console.error("Erreur recherche par email:", err2);
+                  this.error = 'Impossible de charger votre profil donneur.';
+                  this.stopLoading();
+                }
+              });
             } else {
-              this.error = 'Impossible de charger votre profil.';
+              console.error('Email manquant dans le JWT, impossible de chercher le donneur');
+              this.error = 'Profil utilisateur incomplet. Veuillez vous reconnecter.';
+              this.stopLoading();
             }
-            this.stopLoading();
           }
         });
       },
@@ -121,7 +139,7 @@ export class DonorAppointmentsComponent implements OnInit {
   loadAppointments(donneurId: number): void {
     this.donorService.getAppointments(donneurId).subscribe({
       next: (data) => {
-        this.appointments = data.sort((a,b) => new Date(b.dateHeure).getTime() - new Date(a.dateHeure).getTime());
+        this.appointments = data.sort((a,b) => new Date(b.dateRendezVous).getTime() - new Date(a.dateRendezVous).getTime());
         this.stopLoading();
       },
       error: (err) => {
@@ -144,7 +162,7 @@ export class DonorAppointmentsComponent implements OnInit {
       return;
     }
     this.newAppointment = {
-      dateHeure: '',
+      dateRendezVous: '',
       centreId: this.centers[0]?.id || 0,
       donneurId: this.donor.id
     };
@@ -154,8 +172,13 @@ export class DonorAppointmentsComponent implements OnInit {
   }
 
   submitBooking(): void {
-    if (!this.newAppointment.dateHeure || !this.newAppointment.centreId) {
+    if (!this.newAppointment.dateRendezVous || !this.newAppointment.centreId || this.newAppointment.centreId === 0) {
       this.bookingError = 'Veuillez remplir tous les champs.';
+      return;
+    }
+
+    if (!this.donor || this.donor.id <= 0) {
+      this.bookingError = 'Erreur: Votre profil donneur n\'a pu être chargé. Veuillez vous reconnecter.';
       return;
     }
     
@@ -163,16 +186,31 @@ export class DonorAppointmentsComponent implements OnInit {
     this.bookingError = null;
     this.cdr.markForCheck();
 
-    this.donorService.bookAppointment(this.newAppointment).subscribe({
+    // Format date to ISO 8601 LocalDateTime (backend expects LocalDateTime)
+    let dateRendezVous = this.newAppointment.dateRendezVous;
+    // datetime-local gives "2026-03-30T14:30" — append seconds for ISO 8601
+    if (typeof dateRendezVous === 'string' && !dateRendezVous.includes('.')) {
+      dateRendezVous = dateRendezVous.length === 16 ? dateRendezVous + ':00' : dateRendezVous;
+    }
+
+    const appointmentDto: CreateRendezVousDto = {
+      dateRendezVous: dateRendezVous,
+      centreId: this.newAppointment.centreId,
+      donneurId: this.donor.id
+    };
+
+    console.log('Booking appointment with:', appointmentDto);
+
+    this.donorService.bookAppointment(appointmentDto).subscribe({
       next: () => {
         if (this.donor) this.loadAppointments(this.donor.id);
         this.showModal = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erreur réservation:', err);
         let errorMsg = 'Erreur lors de la réservation.';
         if (err.status === 400) {
-          errorMsg = 'Les données envoyées sont invalides.';
+          errorMsg = 'Données invalides. Vérifiez la date et le centre';
         } else if (err.status === 409) {
           errorMsg = 'Ce créneau n\'est plus disponible.';
         } else if (err.status === 500) {
@@ -186,10 +224,9 @@ export class DonorAppointmentsComponent implements OnInit {
 
   getStatusLabel(status: StatutRendezVous): string {
     const map: Record<StatutRendezVous, string> = {
-      [StatutRendezVous.PREVU]: 'Prévu',
+      [StatutRendezVous.PLANIFIE]: 'Prévu',
       [StatutRendezVous.ANNULE]: 'Annulé',
-      [StatutRendezVous.PRESENTE]: 'Effectué',
-      [StatutRendezVous.ABSENT]: 'Absent'
+      [StatutRendezVous.TERMINE]: 'Effectué'
     };
     return map[status] || status;
   }

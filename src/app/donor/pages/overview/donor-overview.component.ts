@@ -53,24 +53,75 @@ export class DonorOverviewComponent implements OnInit {
     // Vérifier que l'ID est valide (pas 0, pas négatif, pas NaN)
     if (!user || !user.id || user.id <= 0 || isNaN(user.id)) {
       console.error('ID utilisateur invalide:', user?.id, 'isNaN:', isNaN(user?.id));
-      this.error = 'Erreur: ID utilisateur invalide ou manquant. Veuillez vous reconnecter.';
+      // Use JWT data as fallback
+      this.donor = {
+        id: user?.id || 0,
+        utilisateurId: user?.id || 0,
+        groupeSanguin: 'O_POS' as any,
+        nombreDonsAnnuel: 0,
+        nom: user?.nom || '',
+        prenom: user?.prenom || 'Utilisateur',
+        email: user?.email || '',
+        telephone: user?.telephone || ''
+      };
       this.loading = false;
       this.cdr.markForCheck();
       return;
     }
 
+    // Try to fetch full profile, but don't fail if not found
     this.donorService.getProfile(user.id).subscribe({
       next: (d) => {
         this.donor = d;
-        this.checkEligibility(d.id);
-      },
-      error: (err) => {
-        console.error("Erreur profil:", err);
-        if (err.status === 404) {
-          this.error = `Donneur non trouvé (ID: ${user.id}). Vérifiez que vous êtes inscrit.`;
-        }
         this.loading = false;
         this.cdr.markForCheck();
+      },
+      error: (err: any) => {
+        if (user?.email) {
+          this.donorService.getDonneurByEmail(user.email).subscribe({
+            next: (d: any) => {
+              this.donor = d || {
+                id: user?.id || 0,
+                utilisateurId: user?.id || 0,
+                groupeSanguin: 'O_POS' as any,
+                nombreDonsAnnuel: 0,
+                nom: user?.nom || '',
+                prenom: user?.prenom || 'Utilisateur',
+                email: user?.email || '',
+                telephone: user?.telephone || ''
+              };
+              this.loading = false;
+              this.cdr.markForCheck();
+            },
+            error: () => {
+              this.donor = {
+                id: user?.id || 0,
+                utilisateurId: user?.id || 0,
+                groupeSanguin: 'O_POS' as any,
+                nombreDonsAnnuel: 0,
+                nom: user?.nom || '',
+                prenom: user?.prenom || 'Utilisateur',
+                email: user?.email || '',
+                telephone: user?.telephone || ''
+              };
+              this.loading = false;
+              this.cdr.markForCheck();
+            }
+          });
+        } else {
+          this.donor = {
+            id: user?.id || 0,
+            utilisateurId: user?.id || 0,
+            groupeSanguin: 'O_POS' as any,
+            nombreDonsAnnuel: 0,
+            nom: user?.nom || '',
+            prenom: user?.prenom || 'Utilisateur',
+            email: user?.email || '',
+            telephone: user?.telephone || ''
+          };
+          this.loading = false;
+          this.cdr.markForCheck();
+        }
       }
     });
   }

@@ -19,6 +19,8 @@ export class DonorHistoryComponent implements OnInit {
 
   history: Don[] = [];
   loading = true;
+  annualQuota: number = 0;
+  maxAnnualQuota: number = 4;
 
   constructor() {}
 
@@ -52,6 +54,7 @@ export class DonorHistoryComponent implements OnInit {
 
     this.donorService.getProfile(user.id).subscribe({
       next: (d) => {
+        // Load history
         this.donorService.getHistory(d.id).subscribe({
           next: (h) => {
             this.history = h.sort((a, b) => new Date(b.dateDon).getTime() - new Date(a.dateDon).getTime());
@@ -59,13 +62,64 @@ export class DonorHistoryComponent implements OnInit {
           },
           error: (err) => {
             console.error('Erreur historique:', err);
+            this.history = [];
             this.stopLoading();
           }
         });
+
+        // Load annual quota
+        this.donorService.getAnnualQuota(d.id).subscribe({
+          next: (quota) => {
+            this.annualQuota = quota.count || 0;
+            this.cdr.markForCheck();
+          },
+          error: (err) => {
+            console.error('Erreur quota annuel:', err);
+            this.annualQuota = 0;
+          }
+        });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erreur profil:', err);
-        this.stopLoading();
+        // Fallback: search by email
+        const user = this.authService.getUser();
+        if (user?.email) {
+          this.donorService.getDonneurByEmail(user.email).subscribe({
+            next: (d: any) => {
+              if (d) {
+                // Load history for this donor
+                this.donorService.getHistory(d.id).subscribe({
+                  next: (h) => {
+                    this.history = h.sort((a: any, b: any) => new Date(b.dateDon).getTime() - new Date(a.dateDon).getTime());
+                    this.stopLoading();
+                  },
+                  error: () => {
+                    this.history = [];
+                    this.stopLoading();
+                  }
+                });
+                // Load annual quota
+                this.donorService.getAnnualQuota(d.id).subscribe({
+                  next: (quota) => {
+                    this.annualQuota = quota.count || 0;
+                    this.cdr.markForCheck();
+                  },
+                  error: () => this.annualQuota = 0
+                });
+              } else {
+                this.history = [];
+                this.stopLoading();
+              }
+            },
+            error: () => {
+              this.history = [];
+              this.stopLoading();
+            }
+          });
+        } else {
+          this.history = [];
+          this.stopLoading();
+        }
       }
     });
   }
@@ -73,6 +127,14 @@ export class DonorHistoryComponent implements OnInit {
   private stopLoading(): void {
     this.loading = false;
     this.cdr.markForCheck();
+  }
+
+  get quotaPercentage(): number {
+    return (this.annualQuota / this.maxAnnualQuota) * 100;
+  }
+
+  get quotaRemaining(): number {
+    return Math.max(0, this.maxAnnualQuota - this.annualQuota);
   }
 
   getStatusLabel(status: string): string {

@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let rdv of rendezVous" [class.row-done]="rdv.statut !== 'PLANIFIE'">
-          <td><strong>{{ rdv.dateHeure | date:'HH:mm' }}</strong></td>
+          <td><strong>{{ rdv.dateRendezVous | date:'HH:mm' }}</strong></td>
           <td>{{ rdv.donneurPrenom }} {{ rdv.donneurNom }}</td>
           <td class="donor-id">#{{ rdv.donneurId }}</td>
           <td>

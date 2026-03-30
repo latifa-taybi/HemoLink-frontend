@@ -1,20 +1,23 @@
 /**
- * Rendez Vous Service - Manages all appointment/scheduling API operations
+ * Rendez-Vous Service - Appointment Scheduling & Management
  * Endpoints: /api/rendez-vous
+ * Manages appointment bookings, cancellations, rescheduling, attendance
+ * Statuses: PREVU, ANNULE, PRESENTE, ABSENT
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { RendezVous, StatutRendezVous, ApiResponse, PageableResponse } from '../models';
+import { RendezVous, StatutRendezVous, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RendezVousService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/rendez-vous';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Appointments

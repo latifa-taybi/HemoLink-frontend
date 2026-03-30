@@ -1,20 +1,23 @@
 /**
- * Poche Sang Service - Manages all blood bag API operations
+ * Poche Sang Service - Blood Bag Inventory Management
  * Endpoints: /api/poches-sang
+ * Manages blood bags, stock levels, status tracking, FEFO inventory
+ * Statuses: EN_ATTENTE_TEST, DISPONIBLE, RESERVEE, TRANSFUSEE, ECARTEE, EXPIRE
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { PocheSang, StatutSang, GroupeSanguin, ApiResponse, PageableResponse } from '../models';
+import { PocheSang, StatutSang, GroupeSanguin, PageableResponse } from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PocheSangService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/poches-sang';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Blood Bags

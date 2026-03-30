@@ -1,20 +1,29 @@
 /**
- * Commande Sang Service - Manages all blood order API operations
+ * Commande Sang Service - Blood Order Management
  * Endpoints: /api/commandes-sang
+ * Manages blood order lifecycle: PENDING → PREPARING → IN_DELIVERY → DELIVERED
+ * Supports urgent/vital emergency orders
  */
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
-import { CommandeSang, StatutCommande, ApiResponse, PageableResponse } from '../models';
+import {
+  CommandeSang,
+  StatutCommande,
+  GroupeSanguin,
+  ElementCommande,
+  PageableResponse
+} from '../models';
+import { inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommandeSangService {
+  private readonly api = inject(ApiService);
   private readonly endpoint = '/commandes-sang';
-
-  constructor(private api: ApiService) {}
 
   // ═══════════════════════════════════════════════════════════════
   // GET - Retrieve Orders
