@@ -78,7 +78,7 @@ export class DonorService {
    */
   getEligibility(donneurId: number): Observable<Eligibilite> {
     return this.http.get<{ donneurId: number; eligible: boolean }>(
-      `${this.baseUrl}/dons/donneur/${donneurId}/eligibilite`
+      `${this.baseUrl}/donneurs/${donneurId}/eligibilite`
     ).pipe(
       switchMap(status => {
         if (status.eligible) {
@@ -126,7 +126,7 @@ export class DonorService {
    */
   getNextEligibleDate(donneurId: number): Observable<{ donneurId: number; date: string }> {
     return this.http.get<{ donneurId: number; date: string }>(
-      `${this.baseUrl}/dons/donneur/${donneurId}/prochaine-date-eligible`
+      `${this.baseUrl}/donneurs/${donneurId}/prochaine-date-eligible`
     );
   }
 
